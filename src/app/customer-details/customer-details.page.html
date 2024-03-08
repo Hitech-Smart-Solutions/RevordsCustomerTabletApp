@@ -1,0 +1,139 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-row style="padding: 0% 1%;">
+      <ion-col size="1" class="d-flex align-items-center">        
+        <img *ngIf="memberImage != null" src="{{memberImage}}" alt="" style="border-radius: 50%; height: 60px; width: 60px;">
+        <img *ngIf="memberImage == null" src="../../assets/defaultUser1.png" alt="" style="border-radius: 50%; height: 60px; width: 60px;">
+      </ion-col>
+      <ion-col size="3" class="headerMemberName">
+        <p class="memberNameText">{{memberName}}</p>
+        <p class="memberSinceText">Member since {{memberSince | date:'MMM dd, YYYY'}}</p>
+      </ion-col>
+      <ion-col size="4" class="d-flex align-items-center justify-content-center">
+        <h1 class="title">Revord Summary</h1>
+      </ion-col>
+      <ion-col size="4" class="d-flex justify-content-end">
+        <div class="badge" [ngStyle]="{'background' : badgeColor}">
+          <img src="./assets/vector-5tm.png" width="45%" />
+        </div>
+        <p class="mb-0 text-center" style="display: flex; flex-direction: column; justify-content: center;">
+          <span class="pointClass">{{memberCurrentPoints}} PT</span>
+          <span class="CurrentPointcls">Current</span>
+          <span class="CurrentPointcls">Balance</span>
+        </p>
+      </ion-col>
+      <!-- <ion-col class="d-flex align-items-center justify-content-center" size="1">
+        <img src="../../assets/wifihigh-6i5.png" alt="" height="35%">
+      </ion-col> -->
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="RewardContainer" *ngIf="!isLoading">
+    <!-- <img src="../../assets/vector-siy.png" alt="" class="RewardContainerbg" style="left: 50%;">
+    <img src="../../assets/vector-Bs7.png" alt="" class="RewardContainerbg" style="left: 0;"> -->
+    <!-- <img src="../../assets/bgSummary.png" class="RewardContainerbg" > -->
+
+    <ion-row style="display: flex; justify-content: center; overflow-y: scroll; padding-top: 4%;">
+      <div class="row" style="width: 100%; margin-bottom: 1%;" *ngIf="!isSpinWheelInteger">
+        <div class="col-md-12">
+          <div class="rewards">
+            <div class="rewardsLeft" style="background: linear-gradient(179.5deg, #957d9d 3.3%, #4a3551 96%);">Spin Wheel</div>
+            <div class="rewardsRight">
+              <ion-item lines="none" style="width: 95%;">
+                <ion-label class="rewardsRightLabel" style="color: #1e7c04 !important;">
+                  {{spinWheelText}}
+                </ion-label>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="width: 100%; margin-bottom: 1%;" *ngIf="showPromotionData == true">
+        <div class="col-md-12" *ngFor="let promotion of promotionData; let i=index">
+          <div class="rewards">
+            <div class="rewardsLeft" style="background: linear-gradient(179.5deg, #f5c986 3.3%, #bd8633 96%);">Promotion</div>
+            <div class="rewardsRight">
+              <ion-item lines="none" style="width: 95%;">
+                <ion-label class="rewardsRightLabel">
+                  {{promotion.promotionalMessage}}
+                </ion-label>
+              </ion-item>
+              <ion-label text-wrap class="rewardsRightExpire">
+                <p class="rewardsRightExpireText" style="margin-right: 3%;" *ngIf="promotion.expiryDays > 1">
+                  Expires in {{promotion.expiryDays}} days</p>
+                <p class="rewardsRightExpireText" style="margin-right: 3%;" *ngIf="promotion.expiryDays == 1">
+                  Expiring Today</p>
+                <p class="rewardsRightExpireText" style="color: #831818 !important;" *ngIf="!promotion.isRedeemable">
+                  Non-Redeemable</p>
+              </ion-label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="width: 100%; margin-bottom: 1%;" *ngIf="showAutopilotData == true">
+        <div class="col-md-12" *ngFor="let autopilot of autopilotData; let i=index">
+          <div class="rewards">
+            <div class="rewardsLeft" style="background: linear-gradient(179.5deg, #007adb96 3.3%, #3397e596 96%);">AutoPilot</div>
+            <div class="rewardsRight">
+              <ion-item lines="none" style="width: 95%;">
+                <ion-label class="rewardsRightLabel">
+                  {{autopilot.rewardName}} -
+                  <span style="font-size: 100%; font-weight: 500;">{{autopilot.campaignName}} </span>
+                </ion-label>
+              </ion-item>
+              <ion-label text-wrap class="rewardsRightExpire">
+                <p class="rewardsRightExpireText">
+                  Expires in {{autopilot.expiryDays}} days</p>
+              </ion-label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="width: 100%; margin-bottom: 1%;" *ngIf="showRewardData == true">
+        <div class="col-md-12">
+          <div class="rewards">
+            <div class="rewardsLeft" style="background: linear-gradient(179.5deg, #50ed83 3.3%, #1b9b44 96%);">Reward</div>
+            <div class="rewardsRight">
+              <ion-item lines="none" style="width: 95%;">
+                <ion-label class="rewardsRightLabel">
+                  {{rewardData.rewardName}}
+                </ion-label>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="noDataContainer" *ngIf="showPromotionData == false && showAutopilotData == false && showRewardData == false
+      && isSpinWheelInteger == true">
+        <h2 class="noDataContainerText">Welcome, '{{memberName}}'! Successfully signed in!</h2>
+      </div>
+    </ion-row>
+
+
+  </div>
+
+  <div class="loadContainer" *ngIf="isLoading">
+    <div class="loading-container">
+      <div class="loading"></div>
+      <div id="loading-text">
+        <img class="logo-dWq" src="../../assets/companylogo.png" />
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer style="box-shadow: none !important;" *ngIf="!isLoading">
+  <ion-row class="btnRow">
+    <p class="countDownText">Back To Home in {{countDown1}}s</p>
+    <div class="btnSubmit" (click)="submit()">
+      <p class="btnSubmitText">Continue</p>
+      <img width="15%" src="../../assets/arrowright-C81.png" />      
+    </div>
+  </ion-row>
+</ion-footer>

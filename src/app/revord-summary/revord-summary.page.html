@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-row style="padding: 0% 1%;">
+      <ion-col size="1" class="d-flex align-items-center">      
+        <img *ngIf="memberImage != null" src="{{memberImage}}" alt="" style="border-radius: 50%; height: 60px; width: 60px;">          
+        <img *ngIf="memberImage == null" src="../../assets/defaultUser1.png" alt="" style="border-radius: 50%; height: 60px; width: 60px;">
+      </ion-col>
+      <ion-col size="3" class="headerMemberName">
+        <p class="memberNameText">{{memberName}}</p>
+        <p class="memberSinceText">Member since {{memberSince | date:'MMM dd, YYYY'}}</p>
+      </ion-col>
+      <ion-col size="4" class="d-flex align-items-center justify-content-center">
+        <h1 class="title">Revord Summary</h1>
+      </ion-col>
+      <ion-col size="4" class="d-flex justify-content-end">
+        <div class="badge" [ngStyle]="{'background' : badgeColor}">
+          <img src="./assets/vector-5tm.png" width="45%" />
+        </div>
+        <p class="mb-0 text-center" style="display: flex; flex-direction: column; justify-content: center;">
+          <span class="pointClass">{{memberCurrentPoints}} PT</span>
+          <span class="CurrentPointcls">Current</span>
+          <span class="CurrentPointcls">Balance</span>
+        </p>
+      </ion-col>
+      <!-- <ion-col class="d-flex align-items-center justify-content-center" size="1">
+        <img src="../../assets/wifihigh-6i5.png" alt="" height="35%">
+      </ion-col> -->
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="SummaryContainer">
+    <!-- <img src="../../assets/vector-siy.png" alt="" class="SummaryContainerbg" style="left: 50%;">
+    <img src="../../assets/vector-Bs7.png" alt="" class="SummaryContainerbg" style="left: 0;"> -->
+    <!-- <img src="../../assets/bgSummary.png"> -->
+
+    <ion-row class="SummaryCard">
+      <div class="SummaryCardInner">
+        <ion-row class="SummaryCardRow">
+          <ion-col size="10" class="SummaryCardCol" style="color: #717679;">Current Point</ion-col>
+          <ion-col size="2" class="SummaryCardCol"
+            style="color: #717679; text-align: center;">{{CurrentPointsDisplay}}</ion-col>
+        </ion-row>
+        <ion-row class="SummaryCardRow">
+          <ion-col size="10" class="SummaryCardCol" style="color: #717679;">SpinWheel Points</ion-col>
+          <ion-col size="2" class="SummaryCardCol"
+            style="color: #717679; text-align: center;">{{EarnedPoints}}</ion-col>
+        </ion-row>
+        <div style="height: 0.5%; width: 95%; background: #d1d1d1;"></div>
+        <ion-row class="SummaryCardRow">
+          <ion-col size="10" class="SummaryCardCol" style="color: #000000;">New Total</ion-col>
+          <ion-col size="2" class="SummaryCardCol" style="color: #000000; text-align: center;">{{NewTotal}}</ion-col>
+        </ion-row>
+      </div>
+    </ion-row>
+  </div>
+</ion-content>
+
+<ion-footer style="box-shadow: none !important;">
+  <!-- <img src="../../assets/vector-siy.png" alt=""
+    style="width: 45%; height: 44%; position: absolute; top: 0; vertical-align: top; left: 50%;">
+  <img src="../../assets/vector-Bs7.png" alt=""
+    style="width: 50%; height: 129%; position: absolute; top: 0; vertical-align: top; left: 0;"> -->
+  <ion-row class="ContinueBtnRow">
+    <p class="countDownText">Back To Home in {{countDownRevordSummary}}s</p>
+    <div class="ContinueBtn" (click)="continue()">
+      <p class="ContinueBtnText">Continue</p>
+      <img width="15%" src="../../assets/arrowright-C81.png" />
+    </div>
+  </ion-row>
+</ion-footer>

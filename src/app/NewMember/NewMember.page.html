@@ -1,0 +1,97 @@
+<ion-content [fullscreen]="true">
+  <div class="loginbg"></div>
+  <div class="loginbgblack"></div>
+  <div class="RewardContainer" *ngIf="!isLoading">
+    <div class="body" [formGroup]="multistep">
+      <div class="wrapper" formGroupName="addMemberDetails">
+        <img src="../../assets/backButton.png" style="position: absolute; width: 4%; top: 2%; left: 2%; background: white;
+        border-radius: 50%; padding: 1%;" (click)="back()" />
+
+        <h3 style="text-align: center; color: #213139;">Enter Your Information</h3>
+        <div class="form-field d-flex align-items-center">
+          <!-- <span><fa-icon icon="envelope"></fa-icon></span> -->
+          <input type="text" name="name" id="name" placeholder="Name" formControlName="name" autocomplete="off">
+        </div>
+        <div class="form-field d-flex align-items-center">
+          <!-- <span><fa-icon icon="envelope"></fa-icon></span> -->
+          <input type="email" placeholder="abc@gmail.com" formControlName="email" autocomplete="off"
+            [class.is-invalid]="Email?.invalid && Email?.touched" />
+        </div>
+        <div class=" d-flex align-items-center">
+          <ion-col size="2" style="color: #272727;">Birthday</ion-col>
+          <ion-col size="5" class="d-flex justify-content-center align-items-center" style="height: 100%;">
+            <div class="col-md-10 DropDownContainer" style="height: 100%;">
+              <div class="dropdown fs-dropdown birthday-dropdown month-dropdown disabled" style="height: 100%">
+                <a class="fs-dropdown-toggle ng-isolate-scope" open-class="fs-dropdown-open"
+                  ng-disabled="memberInfo.web_registered" fs-track-tap="Birth_Month" disabled="disabled"
+                  style="height: 100%;">
+                  <div class="selected-option" style="height: 100%;">
+                    <ion-select placeholder="Select a Month" (ionChange)="onMonthChange()" style="    height: 100%;
+                    background-color: #e3e7ea;
+                    font-weight: 800;
+                    color: #000000;
+                    padding-left: 5%;
+                    font-family: Satoshi Variable, 'Source Sans Pro';
+                    border: none;
+                    border-radius: 10px;
+                    box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;" formControlName="monthID">
+                      <ion-select-option *ngFor="let month of monthlist" [value]="month">{{ month }}</ion-select-option>
+                    </ion-select>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col size="4" class="d-flex justify-content-center align-items-center" style="height: 100%;">
+            <div class="col-md-10 DropDownContainer" style="height: 100%;">
+              <div class="dropdown fs-dropdown birthday-dropdown day-dropdown disabled" style="height: 100%;">
+                <a class="fs-dropdown-toggle ng-isolate-scope" open-class="fs-dropdown-open"
+                  ng-disabled="memberInfo.web_registered" fs-track-tap="Birth_Day" disabled="disabled"
+                  style="height: 100%;">
+                  <div class="selected-option" style="height: 100%;">
+                    <ion-select placeholder="Select a Day" style="    height: 100%;
+                    background-color: #e3e7ea;
+                    font-weight: 800;
+                    color: #000000;
+                    padding-left: 5%;
+                    font-family: Satoshi Variable, 'Source Sans Pro';
+                    border: none;
+                    border-radius: 10px;
+                    box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;" formControlName="dayID">
+                      <ion-select-option *ngFor="let day of days" [value]="day" [disabled]="!isMonthSelect">{{ day
+                        }}</ion-select-option>
+                    </ion-select>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </ion-col>
+        </div>
+        <p style="margin-top: 3%; color: #213139;">You agree to receive occasional updates and promotions via text
+          messages.<span style="color: #c90000;">*</span></p>
+        <div class=" d-flex align-items-center">
+          <ion-radio-group value="true" formControlName="optIn">
+            <ion-radio value="true" labelPlacement="end">Yes (opt-in for SMS)</ion-radio><br />
+            <ion-radio value="false" labelPlacement="end">No (opt-out)</ion-radio><br />
+          </ion-radio-group>
+        </div>
+        <div style="margin-top: 3%;" *ngIf="isAgeRestriction">
+          <ion-col size="6" style="color: #272727;">
+            <ion-checkbox labelPlacement="end" formControlName="isOverAged">I hereby certify that I am at least 21 years
+              old.<span style="color: #c90000;">*</span></ion-checkbox>
+          </ion-col>
+        </div>
+        <button type="submit" class="btn mt-3" (click)="submit()">Let's Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loadContainer" *ngIf="isLoading">
+    <div class="loading-container">
+      <div class="loading"></div>
+      <div id="loading-text">
+        <img class="logo-dWq" src="../../assets/companylogo.png" />
+      </div>
+    </div>
+  </div>
+</ion-content>

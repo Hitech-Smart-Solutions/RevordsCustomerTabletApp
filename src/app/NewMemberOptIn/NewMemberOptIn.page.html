@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true">
+  <div class="loginbg"></div>
+  <div class="loginbgblack"></div>
+  <div class="RewardContainer" *ngIf="!isLoading">
+    <div class="body" [formGroup]="multistep">
+      <div class="wrapper" formGroupName="addMemberDetails">
+        <img src="../../assets/backButton.png" style="position: absolute; width: 4%; top: 2%; left: 2%; background: white;
+        border-radius: 50%; padding: 1%;" (click)="back()" />
+        
+        <p style="margin-top: 3%; color: #213139;">You agree to receive occasional updates and promotions via text
+          messages.<span style="color: #c90000;">*</span></p>
+        <div class=" d-flex align-items-center">
+          <ion-radio-group value="true" formControlName="optIn">
+            <ion-radio value="true" labelPlacement="end">Yes</ion-radio><br />
+            <ion-radio value="false" labelPlacement="end">No</ion-radio><br />
+          </ion-radio-group>
+        </div>
+        <div style="margin-top: 2%;" *ngIf="isAgeRestriction">
+          <ion-col size="6" style="color: #272727;">
+            <ion-checkbox labelPlacement="end" formControlName="isOverAged">I hereby certify that I am at least 21 years
+              old.<span style="color: #c90000;">*</span></ion-checkbox>
+          </ion-col>
+        </div>
+        <button type="submit" class="btn mt-3" (click)="submit()">Let's Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loadContainer" *ngIf="isLoading">
+    <div class="loading-container">
+      <div class="loading"></div>
+      <div id="loading-text">
+        LOADING
+        <!-- <img class="logo-dWq" src="../../assets/companylogo.png" /> -->
+      </div>
+    </div>
+  </div>
+</ion-content>

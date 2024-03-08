@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true">
+
+  <body>
+    <div class="body" *ngIf="showLoginForm == false">
+      <div class="wrapper">
+        <div class="logo">
+          <img src="../../assets/companylogo.png" alt="">
+        </div>
+        <form>
+          <div class="form-field d-flex align-items-center">
+            <span>
+              <ion-icon name="mail"></ion-icon>
+            </span>
+            <input type="email" name="Email" id="Email" [(ngModel)]="Email" placeholder="Email" autocomplete="off">
+          </div>
+          <div class="form-field d-flex align-items-center">
+            <span>
+              <ion-icon name="key"></ion-icon>
+            </span>
+            <input type="password" name="password" id="pwd" [(ngModel)]="Password" placeholder="Password">
+          </div>
+          <button type="submit" class="btn mt-3" (click)='signUp()'>Login</button>
+        </form>
+        <div class="text-center fs-6">
+          <a href="#">Forget password?</a>
+        </div>
+      </div>
+    </div>
+    <div class="loadContainer" *ngIf="isLoadingMember">
+      <div class="loading-container">
+        <div class="loading"></div>
+        <div id="loading-text">          
+          LOADING
+        </div>
+      </div>
+    </div>
+  </body>
+</ion-content>
