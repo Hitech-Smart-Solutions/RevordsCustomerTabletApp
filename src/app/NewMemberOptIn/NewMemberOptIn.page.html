@@ -7,6 +7,15 @@
         <img src="../../assets/backButton.png" style="position: absolute; width: 4%; top: 2%; left: 2%; background: white;
         border-radius: 50%; padding: 1%;" (click)="back()" />
         
+        <div
+          class="countDownText"
+          id="progress-bar"
+          data-progress="30"
+          style="--progress: {{prog1}}%;"
+        >
+          {{this.value/1000}}
+        </div>
+
         <p style="margin-top: 3%; color: #213139;">You agree to receive occasional updates and promotions via text
           messages.<span style="color: #c90000;">*</span></p>
         <div class=" d-flex align-items-center">
@@ -17,7 +26,7 @@
         </div>
         <div style="margin-top: 2%;" *ngIf="isAgeRestriction">
           <ion-col size="6" style="color: #272727;">
-            <ion-checkbox labelPlacement="end" formControlName="isOverAged">I hereby certify that I am at least 21 years
+            <ion-checkbox labelPlacement="end" formControlName="isOverAged" [checked]="isOverAged" [disabled]="isOverAged">I hereby certify that I am at least 21 years
               old.<span style="color: #c90000;">*</span></ion-checkbox>
           </ion-col>
         </div>
@@ -26,6 +35,19 @@
     </div>
   </div>
 
+  <div [ngStyle]="{'display':displayPopup}" *ngIf="isOptInPopupRequired">
+    <div id="popup" class="popup">
+      <h2 class="mb-2">Great!</h2>
+      <div [innerHTML]="OptInPopupText"></div>
+      <button (click)="closePopupOptin()" class="btn btn-success p-2 m-1">
+        Continue
+      </button>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+  </div>
+  
   <div class="loadContainer" *ngIf="isLoading">
     <div class="loading-container">
       <div class="loading"></div>

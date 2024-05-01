@@ -32,8 +32,8 @@ export class GetMemberProfileService {
     }));
   }
 
-  GetSpinWheelConfigByMemberIDBusinessGroupID(memberID: any, businessGroupID: any) {
-    return this.http.get<any>(CONSTANTS.API_ENDPOINT + `SpinWheelDefaultConfigurationHeaders/GetSpinWheelConfigByMemberIDBusinessGroupID/${memberID}/${businessGroupID}`).pipe(map(data => {
+  GetSpinWheelConfigByMemberIDBusinessLocationID(memberID: any, businessLocationID: any, tabletFlag: any) {
+    return this.http.get<any>(CONSTANTS.API_ENDPOINT + `SpinWheelDefaultConfigurationHeaders/GetSpinWheelConfigByMemberIDBusinessLocationID/${memberID}/${businessLocationID}/${tabletFlag}`).pipe(map(data => {
       return data;
     }));
   }
@@ -42,8 +42,8 @@ export class GetMemberProfileService {
     return this.http.get(CONSTANTS.API_ENDPOINT + `MemberProfiles/GetMemberByPhoneNo/${phoneNo}`);
   }
 
-  GetMemberProfileByPhoneNo(businessGroupId: any, phoneNo: any) {
-    return this.http.get(CONSTANTS.API_ENDPOINT + `MemberProfiles/GetMemberProfileByPhoneNo/${businessGroupId}/${phoneNo}`);
+  GetMemberProfileByPhoneNo(businessGroupId: any, businessLocationID:any, phoneNo: any) {
+    return this.http.get(CONSTANTS.API_ENDPOINT + `MemberProfiles/GetMemberProfileByPhoneNo/${businessGroupId}/${businessLocationID}/${phoneNo}`);
   }
 
   PostMemberProfile(newMemberProfileData: any) {
@@ -104,6 +104,12 @@ export class GetMemberProfileService {
   PostMemberWishlistByLike(newMemberData: any) {
     return this.http.post(CONSTANTS.API_ENDPOINT + 'MembersWishLists/PostMemberWishlistInMobile', newMemberData).pipe(map(data => {
       return data;
+    }));
+  }
+
+  PutActivityHistoriesForSpinWheel(type:any, data: any) {
+    return this.http.put(CONSTANTS.API_ENDPOINT + `ActivityHistories/PutActivityHistoryForSpinWheel/${type}`, data).pipe(map(res => {      
+      return res;
     }));
   }
   
