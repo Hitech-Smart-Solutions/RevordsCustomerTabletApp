@@ -7,6 +7,7 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { ActivityHistory, Model } from './model';
 import { DataService } from '../data.service';
+import { CountdownComponent } from 'ngx-countdown';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { DataService } from '../data.service';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    Tab2PageRoutingModule
+    Tab2PageRoutingModule,
+    CountdownComponent
   ],
   declarations: [Tab2Page],
   providers: [

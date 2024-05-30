@@ -5,6 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 import * as CONSTANTS from '../api/services/Constants';
 import { Platform, ToastController } from '@ionic/angular';
+import { Subscription, catchError, interval } from 'rxjs';
+import {
+  CountdownComponent,
+  CountdownConfig,
+  CountdownEvent,
+} from 'ngx-countdown';
 
 @Component({
   selector: 'app-tab2',
@@ -30,18 +36,35 @@ export class Tab2Page {
   BusinessLocationID: any = localStorage.getItem('businessLocationId');
   SourceID: any = localStorage.getItem('sourceId');
   display = 'none';
-  countDownBefore: any;
-  countDownAfter: any;
-  myIntervalBefore: any;
-  myIntervalAfter: any;
-  valueBefore: any;
-  valueAfter: any;
   prog1: any;
   prog2: any;
   showSpinCountdown: boolean = true;
   constnt: any = CONSTANTS;
   isSpin: boolean;
   ActivityHistoryID: any;
+  configBefore: CountdownConfig = {
+    leftTime:
+      60 *
+      (JSON.parse(localStorage.getItem('DynamicField') || '{}')
+        .counterBeforeSpin /
+        60),
+    formatDate: ({ date }) => `${date / 1000}`,
+  };
+  configAfter: CountdownConfig = {
+    leftTime:
+      60 *
+      (JSON.parse(localStorage.getItem('DynamicField') || '{}')
+        .counterAfterSpin /
+        60),
+    formatDate: ({ date }) => `${date / 1000}`,
+  };
+  isTimeOut: any;
+
+  @ViewChild('wheel', { static: false }) wheel: ElementRef;
+  @ViewChild('cdBefore', { static: false })
+  private countdownBefore: CountdownComponent;
+  @ViewChild('cdAfter', { static: false })
+  private countdownAfter: CountdownComponent;
 
   constructor(
     public dataService: DataService,
@@ -63,9 +86,10 @@ export class Tab2Page {
     this.badgeColor = member.badgeColor;
 
     this.spinWheelOpts = JSON.parse(localStorage.getItem('OPTS') || '{}');
-    // this.countDown = 20;
   }
-  @ViewChild('wheel', { static: false }) wheel: ElementRef;
+
+  @ViewChild('cdNewOpt', { static: false })
+  private countdownNewOpt: CountdownComponent;
 
   ionViewWillEnter() {
     let currentDate = CONSTANTS.ISODate();
@@ -101,8 +125,6 @@ export class Tab2Page {
     );
 
     this.isSpin = true;
-    this.countDownBefore = 40;
-    this.valueBefore = 40000;
     this.GetSpinWheelProbabilityByMemberIDBusinessGroupID();
     this.number = Math.ceil(Math.random() * 1000);
     this.spinning = false;
@@ -112,21 +134,41 @@ export class Tab2Page {
     this.closePopup();
     this.wheel.nativeElement.style.transform = 'rotate(0)';
 
-    this.myIntervalBefore = setInterval(() => {
-      this.counterBefore(40);
-    }, 1000);
     const subscription = this.platform.backButton.subscribeWithPriority(
       99999,
       async () => {}
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit() {}
+
+  handleEventBefore(e: CountdownEvent) {
+    if (e.left <= 0) {
+      this.isTimeOut = true;
+      this.spinning = true;
+      this.showSpinCountdown = false;
+      this.router.navigate(['tab1']);
+      let updatedActivityHistory = {
+        id: this.ActivityHistoryID,
+        spinWheelText: 'Spin Wheel Timed out!',
+      };
+      this._memberProfile
+        .PutActivityHistoriesForSpinWheel(4, updatedActivityHistory)
+        .subscribe((data) => {});
+    }
+  }
+
+  handleEventAfter(e: CountdownEvent) {
+    if (e.left <= 0) {
+      this.isTimeOut = true;
+      this.spinning = true;
+      this.showSpinCountdown = false;
+      this.router.navigate(['tab1']);
+    }
+  }
 
   openPopup() {
     this.display = 'block';
-    this.countDownAfter = 20;
-    this.valueAfter = 20000;
   }
   closePopup() {
     this.display = 'none';
@@ -154,143 +196,52 @@ export class Tab2Page {
   }
 
   continue() {
-    if (this.spinWheelOpts[this.spinWheelIndex].isInteger == true) {
-      clearInterval(this.myIntervalAfter);
-      this.showSpinCountdown = false;
-      this.countDownBefore = 40;
-      this.valueBefore = 40000;
-      this.router.navigate(['/revord-summary']);
-    } else {
-      clearInterval(this.myIntervalAfter);
-      this.showSpinCountdown = false;
-      this.countDownBefore = 40;
-      this.valueBefore = 40000;
-      this.router.navigate(['/customer-details']);
-    }
-  }
-
-  counterBefore(numbercheck: any) {
-    const progressBar = document.getElementById('progress-bar') as HTMLElement;
-    if (progressBar != null) {
-      this.valueBefore = this.valueBefore - 1000;
-      this.prog1 =
-        ((numbercheck - this.valueBefore / 1000) * 100) / numbercheck;
-      progressBar.setAttribute(
-        'data-progress',
-        (this.valueBefore / 1000).toString()
-      );
-      if (this.valueBefore <= 1000) {
-        this.spinning = true;
+    if (!this.isTimeOut) {
+      if (this.spinWheelOpts[this.spinWheelIndex].isInteger == true) {
         this.showSpinCountdown = false;
-        clearInterval(this.myIntervalBefore);
-        this.countDownBefore = 40;
-        this.valueBefore = 40000;
-        this.router.navigate(['tab1']);
-        let updatedActivityHistory = {
-          id: this.ActivityHistoryID,
-          spinWheelText: 'Spin Wheel Timed out!',
-        };
-        this._memberProfile
-          .PutActivityHistoriesForSpinWheel(4, updatedActivityHistory)
-          .subscribe((data) => {});
+        this.countdownAfter.stop();
+        this.router.navigate(['/revord-summary']);
+      } else {
+        this.showSpinCountdown = false;
+        this.countdownAfter.stop();
+        this.router.navigate(['/customer-details']);
       }
     }
-  }
-
-  counterAfter(numbercheck: any) {
-    const progressBar = document.getElementById('progress-bar') as HTMLElement;
-    if (progressBar != null) {
-      this.valueAfter = this.valueAfter - 1000;
-      this.prog2 = ((numbercheck - this.valueAfter / 1000) * 100) / numbercheck;
-      progressBar.setAttribute(
-        'data-progress',
-        (this.valueAfter / 1000).toString()
-      );
-      if (this.valueAfter <= 1000) {
-        this.spinning = true;
-        this.showSpinCountdown = false;
-        clearInterval(this.myIntervalAfter);
-        this.router.navigate(['tab1']);
-        this.countDownAfter = 20;
-        this.valueAfter = 20000;
-      }
-    }
-  }
-
-  ionViewDidLeave() {
-    // Do actions here
-    clearInterval(this.myIntervalBefore);
-    clearInterval(this.myIntervalAfter);
   }
 
   async Spin() {
-    clearInterval(this.myIntervalBefore);
+    if (this.countdownBefore != undefined) {
+      this.countdownBefore.stop();
+    }
     this.showSpinCountdown = false;
     this.spinning = true;
     this.isSpin = false;
-    // let updatedActivityHistory = {
-    //   id: this.ActivityHistoryID,
-    //   spinWheelText: 'Loading Spin Wheel Data...',
-    // };
-    // this._memberProfile
-    //   .PutActivityHistoriesForSpinWheel(1, updatedActivityHistory)
-    //   .subscribe((data) => {
-        let rotate = this.spinWheelIndex * 45;
-        let rand = Math.random();
-        this.number += Math.ceil(rand * 10000);
-        this.wheel.nativeElement.style.transform =
-          'rotate(' + (rotate + 30 * 360) + 'deg)';
-        this.wheel.nativeElement.style.transition = 'all 15s';
-        setTimeout(() => {
-          this.spanclassname = 'arrow1 arrowanimation';
-          this.spanclasshover = 'spanHover spanHoveranimation';
+    let rotate = this.spinWheelIndex * 45;
+    let rand = Math.random();
+    this.number += Math.ceil(rand * 10000);
+    this.wheel.nativeElement.style.transform =
+      'rotate(' + (rotate + 30 * 360) + 'deg)';
+    this.wheel.nativeElement.style.transition = 'all 15s';
+    setTimeout(() => {
+      this.spanclassname = 'arrow1 arrowanimation';
+      this.spanclasshover = 'spanHover spanHoveranimation';
 
-          for (let i = 0; i < this.spinWheelOpts.length; i++) {
-            if (i == this.spinWheelIndex) {
-              this.winningPrize = this.spinWheelOpts[i].arctext;
+      for (let i = 0; i < this.spinWheelOpts.length; i++) {
+        if (i == this.spinWheelIndex) {
+          this.winningPrize = this.spinWheelOpts[i].arctext;
 
-              if (this.spinWheelOpts[i].isInteger == true) {
-                let p = Number(this.winningPrize.replace(' Points', ''));
-                let currentDate = CONSTANTS.ISODate();
-                let updatedPoints = {
-                  memberId: this.memberId,
-                  currentPoints: p,
-                  lastVisitDate: currentDate,
-                  lastModifiedDate: currentDate,
-                  lastModifiedBy: this.BusinessLocationID,
-                };
-                this._memberProfile
-                  .PutMemberProfilePoints(updatedPoints)
-                  .subscribe((data) => {
-                    localStorage.removeItem('memberDetails');
-                    this.memberData.memberId = this.memberId;
-                    this.memberData.memberTableID = this.memberTableId;
-                    this.memberData.name = this.memberName;
-                    this.memberData.memberSince = this.memberSince;
-                    this.memberData.memberImg = this.memberImage;
-                    this.memberData.currentPoints = this.memberCurrentPoints;
-                    this.memberData.spinWheelPoint = p;
-                    this.memberData.badgeColor = this.badgeColor;
-                    localStorage.setItem(
-                      'memberDetails',
-                      JSON.stringify(this.memberData)
-                    );
-
-                    let updatedActivityHistory = {
-                      id: this.ActivityHistoryID,
-                      points: p,
-                      spinWheelID: this.spinWheelOpts[i].id,
-                      spinWheelText: this.winningPrize,
-                      isSpinRedeem: true,
-                    };
-                    this._memberProfile
-                      .PutActivityHistoriesForSpinWheel(
-                        2,
-                        updatedActivityHistory
-                      )
-                      .subscribe();
-                  });
-              } else {
+          if (this.spinWheelOpts[i].isInteger == true) {
+            let p = Number(this.winningPrize.replace(' Points', ''));
+            let currentDate = CONSTANTS.ISODate();
+            let updatedPoints = {
+              memberId: this.memberId,
+              currentPoints: p,
+              lastVisitDate: currentDate,
+              lastModifiedDate: currentDate,
+              lastModifiedBy: this.BusinessLocationID,
+            };
+            this._memberProfile.PutMemberProfilePoints(updatedPoints).subscribe(
+              (data) => {
                 localStorage.removeItem('memberDetails');
                 this.memberData.memberId = this.memberId;
                 this.memberData.memberTableID = this.memberTableId;
@@ -298,7 +249,7 @@ export class Tab2Page {
                 this.memberData.memberSince = this.memberSince;
                 this.memberData.memberImg = this.memberImage;
                 this.memberData.currentPoints = this.memberCurrentPoints;
-                this.memberData.spinWheelPoint = this.winningPrize;
+                this.memberData.spinWheelPoint = p;
                 this.memberData.badgeColor = this.badgeColor;
                 localStorage.setItem(
                   'memberDetails',
@@ -307,27 +258,81 @@ export class Tab2Page {
 
                 let updatedActivityHistory = {
                   id: this.ActivityHistoryID,
-                  points: 0,
+                  points: p,
                   spinWheelID: this.spinWheelOpts[i].id,
                   spinWheelText: this.winningPrize,
+                  isSpinRedeem: true,
                 };
                 this._memberProfile
-                  .PutActivityHistoriesForSpinWheel(3, updatedActivityHistory)
+                  .PutActivityHistoriesForSpinWheel(2, updatedActivityHistory)
                   .subscribe();
+              },
+              async (error) => {
+                if (error.status == 0) {
+                  this.showSpinCountdown = false;
+                  if (this.countdownAfter != undefined) {
+                    this.countdownAfter.stop();
+                  }
+                  const toast = await this.toastCtrl.create({
+                    message: "Something went wrong!",
+                    duration: 2500,
+                    cssClass: 'custom-toast',
+                  });
+                  toast.present();
+                  this.router.navigate(['/tab1']);
+                }
               }
-            }
-          }
-        }, 15300);
+            );
+          } else {
+            localStorage.removeItem('memberDetails');
+            this.memberData.memberId = this.memberId;
+            this.memberData.memberTableID = this.memberTableId;
+            this.memberData.name = this.memberName;
+            this.memberData.memberSince = this.memberSince;
+            this.memberData.memberImg = this.memberImage;
+            this.memberData.currentPoints = this.memberCurrentPoints;
+            this.memberData.spinWheelPoint = this.winningPrize;
+            this.memberData.badgeColor = this.badgeColor;
+            localStorage.setItem(
+              'memberDetails',
+              JSON.stringify(this.memberData)
+            );
 
-        setTimeout(() => {
-          this.openPopup();
-          this.countDownAfter = 20;
-          this.valueAfter = 20000;
-          this.showSpinCountdown = true;
-          this.myIntervalAfter = setInterval(() => {
-            this.counterAfter(20);
-          }, 1000);
-        }, 18000);
-      // });
+            let updatedActivityHistory = {
+              id: this.ActivityHistoryID,
+              points: 0,
+              spinWheelID: this.spinWheelOpts[i].id,
+              spinWheelText: this.winningPrize,
+            };
+            this._memberProfile
+              .PutActivityHistoriesForSpinWheel(3, updatedActivityHistory)
+              .subscribe(
+                (data) => {},
+                async (error) => {
+                  if (error.status == 0) {
+                    this.showSpinCountdown = false;
+                    if (this.countdownAfter != undefined) {
+                      this.countdownAfter.stop();
+                    }
+                    const toast = await this.toastCtrl.create({
+                      message: "Something went wrong!",
+                      duration: 2500,
+                      cssClass: 'custom-toast',
+                    });
+                    toast.present();
+                    this.router.navigate(['/tab1']);
+                  }
+                }
+              );
+          }
+        }
+      }
+    }, 15300);
+
+    setTimeout(() => {
+      this.openPopup();
+      this.showSpinCountdown = true;
+      this.prog2 = -100;
+    }, 18000);
   }
 }

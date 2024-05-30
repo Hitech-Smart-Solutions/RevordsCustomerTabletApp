@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       async (error: any) => {
         if (error.status == 404) {
           const toast = await this.toastCtrl.create({
-            message: "Enter valid credential!!",
+            message: "Enter valid credential!",
             duration: 2500,
             cssClass: 'custom-toastDanger'
           });

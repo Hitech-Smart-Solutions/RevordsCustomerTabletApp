@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   AlertController,
@@ -14,6 +19,12 @@ import {
   FormControl,
 } from '@angular/forms';
 import * as CONSTANTS from '../api/services/Constants';
+import { Subscription, interval } from 'rxjs';
+import {
+  CountdownComponent,
+  CountdownConfig,
+  CountdownEvent,
+} from 'ngx-countdown';
 
 @Component({
   selector: 'app-NewMember',
@@ -21,10 +32,7 @@ import * as CONSTANTS from '../api/services/Constants';
   styleUrls: ['NewMember.page.scss'],
 })
 export class NewMemberPage {
-  countDown: any;
-  myInterval: any;
-  value: any;
-  prog1: any;
+  prog1NewMember: any;
   members: any;
   response: any;
   display = '';
@@ -83,6 +91,10 @@ export class NewMemberPage {
   isAgeRestriction: boolean;
   isOptInPopupRequired: boolean;
   OptInPopupText: string;
+  dynamicField: any;
+  data: any;
+  bgImg: any = CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
+  alert: any;
 
   constructor(
     private router: Router,
@@ -91,7 +103,6 @@ export class NewMemberPage {
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
     public formBuilder: FormBuilder,
-    private _spinService: GetMemberProfileService,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController
   ) {
@@ -115,29 +126,44 @@ export class NewMemberPage {
       }
     });
   }
+  @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
 
-  ionViewWillEnter() {
-    this.countDown = 120;
-    this.value = 120000;
-    this.myInterval = setInterval(() => {
-      this.counter(120);
-    }, 1000);
+  config: CountdownConfig = {
+    leftTime:
+      60 *
+      (JSON.parse(localStorage.getItem('DynamicField') || '{}')
+        .counterNewMember /
+        60),
+    formatDate: ({ date }) => `${date / 1000}`,
+  };
+
+  async ionViewWillEnter() {
+    this.dynamicField = JSON.parse(
+      localStorage.getItem('DynamicField') || '{}'
+    );
+    if (Object.keys(this.dynamicField).length == 0) {
+      if (this.alert != undefined && this.alert != null) {
+        this.alert.dismiss();
+      }
+      this.router.navigate(['tab1']);
+
+      const toast = await this.toastCtrl.create({
+        message: 'Something went wrong, Please try again!',
+        duration: 3500,
+        cssClass: 'custom-toastDanger',
+      });
+      toast.present();
+    }
   }
 
   ngOnInit() {}
 
-  counter(numbercheck: any) {
-    const progressBar = document.getElementById('progress-bar') as HTMLElement;
-    if (progressBar != null) {
-      this.value = this.value - 1000;
-      this.prog1 = ((numbercheck - this.value / 1000) * 100) / numbercheck;
-      progressBar.setAttribute('data-progress', (this.value / 1000).toString());
-      if (this.value <= 1000) {
-        clearInterval(this.myInterval);
-        this.countDown = 120;
-        this.value = 120000;
-        this.router.navigate(['tab1']);
+  handleEvent(e: CountdownEvent) {
+    if (e.left <= 0) {
+      if (this.alert != undefined && this.alert != null) {
+        this.alert.dismiss();
       }
+      this.router.navigate(['tab1']);
     }
   }
 
@@ -146,8 +172,10 @@ export class NewMemberPage {
   }
 
   back() {
+    if (this.alert != undefined && this.alert != null) {
+      this.alert.dismiss();
+    }
     this.router.navigate(['/tab1']);
-    clearInterval(this.myInterval);
   }
 
   onMonthChange() {
@@ -178,7 +206,7 @@ export class NewMemberPage {
   }
 
   async getSpinWheelConfig(memberId: any) {
-    let action = this._spinService
+    let action = this._memberProfile
       .GetSpinWheelConfigByMemberIDBusinessLocationID(
         memberId,
         this.BusinessLocationID,
@@ -215,11 +243,12 @@ export class NewMemberPage {
 
   async submitData() {
     if (
-      this.AddMemberDetails.optIn.value == null ||
-      this.AddMemberDetails.optIn.value == ''
+      (this.AddMemberDetails.optIn.value == null ||
+        this.AddMemberDetails.optIn.value == '') &&
+      this.dynamicField.isOptInRequired == true
     ) {
       const toast = await this.toastCtrl.create({
-        message: 'Please select one option for opt-in!!',
+        message: 'Please select one option for opt-in!',
         duration: 3500,
         cssClass: 'custom-toast',
       });
@@ -311,8 +340,11 @@ export class NewMemberPage {
         this.AddMemberDetails.optIn.value == ''
           ? false
           : this.AddMemberDetails.optIn.value;
-      if (optin.toString() == 'false') {
-        const alert = await this.alertCtrl.create({
+      if (
+        optin.toString() == 'false' &&
+        this.dynamicField.isOptInRequired == true
+      ) {
+        this.alert = await this.alertCtrl.create({
           header: "Are you sure you don't want to opt-in ?",
           buttons: [
             {
@@ -329,12 +361,15 @@ export class NewMemberPage {
             },
           ],
         });
-        await alert.present();
+        await this.alert.present();
       } else {
-        if (this.isOptInPopupRequired == true) {
-          this.displayPopup = 'block';          
+        if (
+          this.isOptInPopupRequired == true &&
+          this.dynamicField.isOptInRequired == true
+        ) {
+          this.displayPopup = 'block';
         } else {
-          this.Save(this.newMemberData);          
+          this.Save(this.newMemberData);
         }
       }
     }
@@ -349,7 +384,7 @@ export class NewMemberPage {
           // this.router.navigate(['/tab1']);
           const toast = await this.toastCtrl.create({
             message:
-              'Please confirm that you are at least 21 years old to proceed!!',
+              'Please confirm that you are at least 21 years old to proceed!',
             duration: 3500,
             cssClass: 'custom-toastDanger',
           });
@@ -360,7 +395,7 @@ export class NewMemberPage {
       }
     } else {
       const toast = await this.toastCtrl.create({
-        message: 'Please enter valid email!!',
+        message: 'Please enter valid email!',
         duration: 3500,
         cssClass: 'custom-toast',
       });
@@ -371,9 +406,8 @@ export class NewMemberPage {
   async Save(newMemberData: any) {
     try {
       this.isLoading = true;
-      this._memberProfile
-        .PostNewMemberInStore(newMemberData)
-        .subscribe(async (res: any) => {
+      this._memberProfile.PostNewMemberInStore(newMemberData).subscribe(
+        async (res: any) => {
           let members = res;
           this._memberProfile
             .GetMemberProfileByPhoneNo(
@@ -392,7 +426,7 @@ export class NewMemberPage {
               this.m.badgeColor = d[0].badgeColor;
               localStorage.setItem('memberDetails', JSON.stringify(this.m));
 
-              this._spinService
+              this._memberProfile
                 .GetSpinWheelConfigByMemberIDBusinessLocationID(
                   this.m.memberId,
                   this.BusinessLocationID,
@@ -424,12 +458,10 @@ export class NewMemberPage {
                     this.phoneNumber = '';
                     this.isLoading = false;
                     this.router.navigate(['/tab2']);
-                    clearInterval(this.myInterval);
                   },
                   async (error) => {
                     if (error.status == 404) {
                       this.router.navigate(['/customer-details']);
-                      clearInterval(this.myInterval);
                       this.phoneNumber = '';
                       this.isLoading = false;
                     }
@@ -440,7 +472,28 @@ export class NewMemberPage {
                   // }
                 );
             });
-        });
+        },
+        async (error) => {
+          if (error.status == 409) {
+            
+            this.router.navigate(['/tab1']);
+            const toast = await this.toastCtrl.create({
+              message: "You're already a member, Please Signin again!",
+              duration: 3500,
+              cssClass: 'custom-toast',
+            });
+            toast.present();
+          } else {
+            this.isLoading = false;
+            const toast = await this.toastCtrl.create({
+              message: "Something went wrong, Please try again!",
+              duration: 3500,
+              cssClass: 'custom-toast',
+            });
+            toast.present();
+          }
+        }
+      );
     } catch (error) {
       this.isLoading = false;
     }

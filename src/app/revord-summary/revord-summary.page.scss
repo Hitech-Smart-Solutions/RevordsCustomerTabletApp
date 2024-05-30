@@ -59,7 +59,7 @@
     position: relative; 
     overflow: scroll; 
     background-color: #d9e7ed;
-    background-image: url('../../assets/bgSummary.png');
+    // background-image: url('../../assets/bgSummary.png');
 }
 .SummaryContainerbg {
     width: 50%; 
@@ -101,8 +101,8 @@
     justify-content: end; 
     align-items: baseline;
     width: 100%; 
-    background-color: #d9e7ed;
-    background-image: url('../../assets/bgSummary.png');
+    // background-color: #d9e7ed;
+    // background-image: url('../../assets/bgSummary.png');
 }
 .ContinueBtn {
     display: flex; 

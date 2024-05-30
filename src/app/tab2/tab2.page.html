@@ -1,498 +1,357 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-row style="padding: 0% 1%;">
-            <ion-col size="1" class="d-flex align-items-center">
-                <img *ngIf="(memberImage != null)" src="{{memberImage}}" alt=""
-                    style="border-radius: 50%; height: 60px; width: 60px;">
-                <img *ngIf="(memberImage == null)" src="../../assets/defaultUser1.png" alt=""
-                    style="border-radius: 50%; height: 60px; width: 60px;">
-            </ion-col>
-            <ion-col size="3" class="headerMemberName">
-                <p class="memberNameText">{{memberName}}</p>
-                <p class="memberSinceText">Member since {{memberSince | date:'MMM dd, YYYY'}}</p>
-            </ion-col>
-            <ion-col size="4" class="d-flex align-items-center justify-content-center">
-                <h1 class="title">Spin the Wheel</h1>
-            </ion-col>
-            <ion-col size="4" class="d-flex justify-content-end">
-                <div class="badge" [ngStyle]="{'background' : badgeColor}">
-                    <img src="./assets/vector-5tm.png" width="45%" />
-                </div>
-                <p class="mb-0 text-center d-flex flex-column justify-content-center">
-                    <span class="pointClass">{{memberCurrentPoints}} PT</span>
-                    <span class="CurrentPointcls">Current</span>
-                    <span class="CurrentPointcls">Balance</span>
-                </p>
-            </ion-col>
-            <!-- <ion-col class="d-flex align-items-center justify-content-center" size="1">
+  <ion-toolbar>
+    <ion-row style="padding: 0% 1%">
+      <ion-col size="1" class="d-flex align-items-center">
+        <img
+          *ngIf="(memberImage != null)"
+          src="{{memberImage}}"
+          alt=""
+          style="border-radius: 50%; height: 60px; width: 60px"
+        />
+        <img
+          *ngIf="(memberImage == null)"
+          src="../../assets/defaultUser1.png"
+          alt=""
+          style="border-radius: 50%; height: 60px; width: 60px"
+        />
+      </ion-col>
+      <ion-col size="3" class="headerMemberName">
+        <p class="memberNameText">{{memberName}}</p>
+        <p class="memberSinceText">
+          Member since {{memberSince | date:'MMM dd, YYYY'}}
+        </p>
+      </ion-col>
+      <ion-col
+        size="4"
+        class="d-flex align-items-center justify-content-center"
+      >
+        <h1 class="title">Spin the Wheel</h1>
+      </ion-col>
+      <ion-col size="4" class="d-flex justify-content-end">
+        <div class="badge" [ngStyle]="{'background' : badgeColor}">
+          <img src="./assets/vector-5tm.png" width="45%" />
+        </div>
+        <p class="mb-0 text-center d-flex flex-column justify-content-center">
+          <span class="pointClass">{{memberCurrentPoints}} PT</span>
+          <span class="CurrentPointcls">Current</span>
+          <span class="CurrentPointcls">Balance</span>
+        </p>
+      </ion-col>
+      <!-- <ion-col class="d-flex align-items-center justify-content-center" size="1">
                 <img src="../../assets/wifihigh-6i5.png" alt="" height="35%">
             </ion-col> -->
-        </ion-row>
-    </ion-toolbar>
+    </ion-row>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <div class="spinwheel-HwP">
-
-        <div *ngIf="showSpinCountdown && isSpin" class="countDownText" id="progress-bar" data-progress="40"
-            style="--progress: {{prog1}}%;">{{this.valueBefore/1000}}</div>
-        <div *ngIf="showSpinCountdown && !isSpin" class="countDownText" id="progress-bar" data-progress="20"
-            style="--progress: {{prog2}}%;">{{this.valueAfter/1000}}</div>
-
-        <div class="isolationmode-bhB">
-
-            <span [ngClass]="spanclasshover"></span>
-            <div class="outer">
-
-                <div class="orb">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb2">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb3">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb4">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb5">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb6">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb7">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb8">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb9">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb10">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb11">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb12">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb13">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb14">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb15">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="orb16">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-            </div>
-
-            <div style="  width: 125px;
-        /* background-color: black; */
-        z-index: 17;
-        position: absolute;
-        height: 125px;
-        top: 50%;
-        left: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background-color: #d39133;">
-                <span [ngClass]="spanclassname"></span>
-
-
-                <div class="innerBtn1">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn2">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn3">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn4">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn5">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn6">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn7">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-                <div class="innerBtn8">
-                    <div [ngClass]="spinning ? 'shine' : '' "></div>
-                    <div class="light"></div>
-                </div>
-
-                <button id="spin" (click)="Spin()" [disabled]="spinning"
-                    style="background: linear-gradient(180deg, #8faeff -0%, #305ac3 59.37%, #001b61 96.35%);color: orange;">Spin</button>
-            </div>
-
-            <div class="container glowing" #wheel id="wheel">
-
-                <div class="one">
-
-                    <span
-                        style="position: absolute;background: #C8D92B;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; ">
-
-                    </span>
-                    <span style="position: absolute;
-                background:   #EFFF57;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[0].arctext}}
-                            <!-- 10%
-                            <br /> DISCOUNT -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #FFEDA4;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-                <div class="two">
-
-                    <span
-                        style="position: absolute;background: #A51E1E;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background:   #FCA1A1;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[7].arctext}}
-                            <!-- 1
-                            <br /> POINT -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #F8D0D0;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-                <div class="three">
-                    <span
-                        style="position: absolute;background: #3397F1;
-                width: 100%;
-                height: 31%;
-                top: 0%;     box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background:   #95CDFF;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[6].arctext}}
-                            <!-- 3
-                            <br /> POINTS -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #C3E3FF;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-                <div class="four">
-                    <span
-                        style="position: absolute;background: #595BFA;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background: #9394FF;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[5].arctext}}
-                            <!-- 75%
-                            <br /> DISCOUNT -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #BABBFF;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-
-                </div>
-                <div class="five">
-                    <span
-                        style="position: absolute;background: #FFA9E9;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background:  #FFC9F1;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[4].arctext}}
-                            <!-- 5
-                            <br /> POINTS -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #FFE0F7;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-                <div class="six">
-                    <span
-                        style="position: absolute;background: #F1592B;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background:   #FF906F;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[3].arctext}}
-                            <!-- 50%
-                            <br /> DISCOUNT -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #FFB7A1;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-                <div class="seven">
-
-                    <span
-                        style="position: absolute;background: #F59130;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background:   #FFB56D;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[2].arctext}}
-                            <!-- 5%
-                            <br /> DISCOUNT -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #FFCD9C;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-                <div class="eight">
-                    <span
-                        style="position: absolute;background: #FDD843;
-                width: 100%;
-                height: 31%;
-                top: 0%;    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
-
-                    </span>
-                    <span style="position: absolute;
-                background:   #FFE57A;
-                width: 100%;
-                height: 28%;
-                top: 26%;
-    border-radius: 70%;
-    display: flex;
-    justify-content: center;
-    align-items: end;">
-
-                        <p style="
-                color: #403d3d;
-                font-weight: 800;
-                font-size: 14px; text-transform: uppercase; width: 50%;">{{spinWheelOpts[1].arctext}}
-                            <!-- 3
-                            <br /> POINTS -->
-                        </p>
-                    </span>
-                    <span style="position: absolute;
-                background: #FFEDA4;
-                width: 100%;
-                height: 28%;
-                top: 56%;">
-
-                    </span>
-                </div>
-            </div>
-
-        </div>
+  <div class="spinwheel-HwP">
+    <div *ngIf="showSpinCountdown && isSpin" class="countDownText">
+      <countdown
+        #cdBefore
+        (event)="handleEventBefore($event)"
+        [config]="configBefore"
+      ></countdown>
+    </div>
+    <div *ngIf="showSpinCountdown && !isSpin" class="countDownTextAfter">
+      <countdown
+        #cdAfter
+        (event)="handleEventAfter($event)"
+        [config]="configAfter"
+      ></countdown>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}" style="height: 50%; width: 40%; position: absolute;
-    top: 55%; left: 50%; transform: translate(-50%, -50%); border-radius: 3rem;">
-        <div class="modal-dialog" role="document" style="height: 100%; margin: 0; width: 100%;">
-            <div class="modal-content" style="height: 100%; width: 100%;">
-                <ion-row>
-                    <ion-col class="d-flex align-items-center justify-content-center" size="4">
-                        <img height="25%" src="./assets/ellipse-31-Kku.png">
-                    </ion-col>
-                    <ion-col size="4" class="d-flex align-items-center justify-content-center">
-                        <span style="    font-size: 50px;
-                        background: #fbf7f2;
-                        border-radius: 5rem;
-                        padding: 8%;">
-                            🎉
-                        </span></ion-col>
-                    <ion-col size="4">
-                        <div class="ellipse-30-qEh" style="    margin-top: 2.1742rem;
-                        width: 4.6962rem;
-                        height: 4.6962rem;
-                        background-color: #f2e6fa;
-                        border-radius: 2.3481rem;">
-                        </div>
-                    </ion-col>
-                </ion-row>
-                <ion-row class="d-flex align-items-center justify-content-center">
-                    <p style=" font-size: 115%;
-                font-weight: 700;
-                color: #173f57;
-                font-family: 'Satoshi Variable', 'Source Sans Pro'; 
-                display: block;
-                width: 100%;
-                text-align: center;
-                margin-top: 5%;">Congratulations you have earned</p>
-                    <p style=" font-size: 150%;
-                font-weight: 700;
-                color: #173f57;
-                font-family: 'Satoshi Variable', 'Source Sans Pro'; 
-                display: block;
-                width: 100%;
-                text-align: center;">{{winningPrize}}</p>
-
-                    <div class="ContinueBtn" (click)="continue()">
-                        <p class="ContinueBtnText">Continue</p>
-                        <img width="15%" src="../../assets/arrowright-C81.png" />
-                    </div>
-                </ion-row>
-            </div>
+    <div class="isolationmode-bhB">
+      <span [ngClass]="spanclasshover"></span>
+      <div class="outer">
+        <div class="orb">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
         </div>
+        <div class="orb2">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb3">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb4">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb5">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb6">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb7">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb8">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb9">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb10">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb11">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb12">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb13">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb14">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb15">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="orb16">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+      </div>
+
+      <div
+        style="
+          width: 125px;
+          /* background-color: black; */
+          z-index: 17;
+          position: absolute;
+          height: 125px;
+          top: 50%;
+          left: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          background-color: #d39133;
+        "
+      >
+        <span [ngClass]="spanclassname"></span>
+
+        <div class="innerBtn1">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn2">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn3">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn4">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn5">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn6">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn7">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+        <div class="innerBtn8">
+          <div [ngClass]="spinning ? 'shine' : '' "></div>
+          <div class="light"></div>
+        </div>
+
+        <button
+          id="spin"
+          (click)="Spin()"
+          [disabled]="spinning"
+          style="
+            background: linear-gradient(
+              180deg,
+              #8faeff -0%,
+              #305ac3 59.37%,
+              #001b61 96.35%
+            );
+            color: orange;
+          "
+        >
+          Spin
+        </button>
+      </div>
+
+      <div class="container glowing" #wheel id="wheel">
+        <div class="one">
+          <span class="slicepart1" style="background: #c8d92b"> </span>
+          <span class="slicepart2" style="background: #efff57">
+            <p class="slicepart2text">{{spinWheelOpts[0].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #ffeda4"> </span>
+        </div>
+        <div class="two">
+          <span class="slicepart1" style="background: #a51e1e"> </span>
+          <span class="slicepart2" style="background: #fca1a1">
+            <p class="slicepart2text">{{spinWheelOpts[7].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #f8d0d0"> </span>
+        </div>
+        <div class="three">
+          <span class="slicepart1" style="background: #3397f1"> </span>
+          <span class="slicepart2" style="background: #95cdff">
+            <p class="slicepart2text">{{spinWheelOpts[6].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #c3e3ff"> </span>
+        </div>
+        <div class="four">
+          <span class="slicepart1" style="background: #595bfa"> </span>
+          <span class="slicepart2" style="background: #9394ff">
+            <p class="slicepart2text">{{spinWheelOpts[5].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #babbff"> </span>
+        </div>
+        <div class="five">
+          <span class="slicepart1" style="background: #ffa9e9"> </span>
+          <span class="slicepart2" style="background: #ffc9f1">
+            <p class="slicepart2text">{{spinWheelOpts[4].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #ffe0f7"> </span>
+        </div>
+        <div class="six">
+          <span class="slicepart1" style="background: #f1592b"> </span>
+          <span class="slicepart2" style="background: #ff906f">
+            <p class="slicepart2text">{{spinWheelOpts[3].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #ffb7a1"> </span>
+        </div>
+        <div class="seven">
+          <span class="slicepart1" style="background: #f59130"> </span>
+          <span class="slicepart2" style="background: #ffb56d">
+            <p class="slicepart2text">{{spinWheelOpts[2].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #ffcd9c"> </span>
+        </div>
+        <div class="eight">
+          <span class="slicepart1" style="background: #fdd843"> </span>
+          <span class="slicepart2" style="background: #ffe57a">
+            <p class="slicepart2text">{{spinWheelOpts[1].arctext}}</p>
+          </span>
+          <span class="slicepart3" style="background: #ffeda4"> </span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    [ngStyle]="{'display':display}"
+    style="
+      height: 50%;
+      width: 50%;
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 3rem;
+    "
+  >
+    <div
+      class="modal-dialog"
+      role="document"
+      style="height: 100%; margin: 0; width: 100%; max-width: none"
+    >
+      <div class="modal-content" style="height: 100%; width: 100%">
+        <ion-row>
+          <ion-col
+            class="d-flex align-items-center justify-content-center"
+            size="4"
+          >
+            <img height="25%" src="./assets/ellipse-31-Kku.png" />
+          </ion-col>
+          <ion-col
+            size="4"
+            class="d-flex align-items-center justify-content-center"
+          >
+            <span
+              style="
+                font-size: 50px;
+                background: #fbf7f2;
+                border-radius: 5rem;
+                padding: 8%;
+              "
+            >
+              🎉
+            </span></ion-col
+          >
+          <ion-col size="4">
+            <div
+              class="ellipse-30-qEh"
+              style="
+                margin-top: 2.1742rem;
+                width: 4.6962rem;
+                height: 4.6962rem;
+                background-color: #f2e6fa;
+                border-radius: 2.3481rem;
+              "
+            ></div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="d-flex align-items-center justify-content-center">
+          <p
+            style="
+              font-size: 115%;
+              font-weight: 700;
+              color: #173f57;
+              font-family: 'Satoshi Variable', 'Source Sans Pro';
+              display: block;
+              width: 100%;
+              text-align: center;
+              margin-top: 5%;
+            "
+          >
+            Congratulations you have earned
+          </p>
+          <p
+            style="
+              font-size: 150%;
+              font-weight: 700;
+              color: #173f57;
+              font-family: 'Satoshi Variable', 'Source Sans Pro';
+              display: block;
+              width: 100%;
+              text-align: center;
+            "
+          >
+            {{winningPrize}}
+          </p>
+
+          <div class="ContinueBtn" (click)="continue()">
+            <p class="ContinueBtnText">Continue</p>
+            <img width="15%" src="../../assets/arrowright-C81.png" />
+          </div>
+        </ion-row>
+      </div>
+    </div>
+  </div>
 </ion-content>

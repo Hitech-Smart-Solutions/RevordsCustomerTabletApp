@@ -9,6 +9,7 @@ import { NewMemberOptInPageRoutingModule } from './NewMemberOptIn-routing.module
 import { GetMemberProfileService } from '../api/services/get-member-profile.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MembersVistLog, Model } from '../tab2/model';
+import { CountdownComponent } from 'ngx-countdown';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { MembersVistLog, Model } from '../tab2/model';
     NewMemberOptInPageRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    CountdownComponent
   ],
   declarations: [NewMemberOptInPage],
   providers: [

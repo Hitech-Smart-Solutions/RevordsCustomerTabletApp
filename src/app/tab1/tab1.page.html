@@ -1,23 +1,34 @@
 <ion-content [fullscreen]="true">
   <div class="loginContainer">
-    <div class="loginbg"></div>
-    <div class="loginbgblack"></div>
-    <div class="loginContent" *ngIf="!isLoading">    
-
-      <ion-row style="width: 100%; height: 100%; padding: 1%;">
+    <div
+      class="loginbg"
+      [ngStyle]="{'background-image': 'url(' + bgImg + ')' }"
+    ></div>
+    <!-- <div class="loginbgblack"></div> -->
+    <div class="loginContent" *ngIf="!isLoading">
+      <ion-row style="width: 100%; height: 100%; padding: 1%">
         <ion-col size="6">
-          <ion-row class="logo d-flex justify-content-center align-items-center">
+          <ion-row
+            class="logo d-flex justify-content-center align-items-center"
+          >
             <div class="logobg d-flex align-items-center">
-              <img height="85%" style="border-radius: 1rem;" src="{{businessGroupLogo}}" />
+              <img
+                height="85%"
+                style="border-radius: 1rem"
+                src="{{businessGroupLogo}}"
+              />
             </div>
           </ion-row>
-          <ion-row style="height: 50%;">
+          <ion-row style="height: 50%">
             <div class="instructionContainer">
-              <div class="instruction">
-                <img class="instructionImg" src="../../assets/checkcircle-aBK.png" />
-                <p class="instructionText">Enter your phone number to sign in.</p>
+              <div class="instruction" *ngFor="let info of InfoText">
+                <img
+                  class="instructionImg"
+                  src="../../assets/checkcircle-aBK.png"
+                />
+                <p class="instructionText">{{info.informationText}}</p>
               </div>
-              <div class="instruction">
+              <!-- <div class="instruction">
                 <img class="instructionImg" src="../../assets/checkcircle-aBK.png" />
                 <p class="instructionText">Earn points every time you sign in.</p>
               </div>
@@ -28,17 +39,24 @@
               <div class="instruction">
                 <img class="instructionImg" src="../../assets/checkcircle-aBK.png" />
                 <p class="instructionText">More visits earn more rewards.</p>
-              </div>
+              </div> -->
             </div>
           </ion-row>
         </ion-col>
-        <ion-col size="6" class="d-flex align-items-center justify-content-center">
+        <ion-col
+          size="6"
+          class="d-flex align-items-center justify-content-center"
+        >
           <div class="keypadContainer">
             <img src="../../assets/companylogo.png" width="50%" />
             <div class="keypad">
               <div class="keypadInput">
-                <ion-label class="ion-text-center keypadInputLabel" floating
-                  placeholder="(000) 000-0000">{{display}}</ion-label>
+                <ion-label
+                  class="ion-text-center keypadInputLabel"
+                  floating
+                  placeholder="(000) 000-0000"
+                  >{{display}}</ion-label
+                >
               </div>
               <div class="keypadbtnRow d-flex align-items-center">
                 <div class="keypadBtn" (click)="click('1')">1</div>
@@ -56,394 +74,66 @@
                 <div class="keypadBtn" (click)="click('9')">9</div>
               </div>
               <div class="keypadbtnRow d-flex align-items-center">
-                <div class="keypadBtn" style="border: none !important;" (click)="click('delete-left')">
+                <div
+                  class="keypadBtn"
+                  style="border: none !important"
+                  (click)="click('delete-left')"
+                >
                   <ion-icon name="backspace-outline"></ion-icon>
                 </div>
                 <div class="keypadBtn" (click)="click('0')">0</div>
-                <div class="keypadBtn" style="border: none !important;" (click)='signUp()'>
+                <div
+                  class="keypadBtn"
+                  style="border: none !important"
+                  (click)="signUp()"
+                >
                   <ion-icon name="arrow-forward-outline"></ion-icon>
                 </div>
               </div>
             </div>
-            <p class="keypadText">
-              <span> By signing up, you agree to receive occasional updates and promotions via text message and to our
+            <p class="keypadText" *ngIf="dynamicField != undefined">
+              <span> {{dynamicField.termsCondText1}}</span>
+              <span
+                style="text-decoration-line: underline; color: #00a100"
+                id="open-modal"
+                (click)="setPrivacyModal(true)"
+              >
+                Terms &amp; Privacy Policy.
               </span>
-              <span style="text-decoration-line: underline;color: #00a100;" id="open-modal"
-                (click)="setPrivacyModal(true)"> Terms &amp; Privacy Policy.
+              <span
+                ><br />
+                {{dynamicField.termsCondText2}}
               </span>
-              <span><br /> You can opt-out anytime by replying 'STOP'. </span>
             </p>
-            <p class="keypadText">App Version: {{currentVersion}}</p>            
+            <p class="keypadText">App Version: {{currentVersion}}</p>
           </div>
         </ion-col>
       </ion-row>
     </div>
 
-    <ion-modal [isOpen]="isModalOpen" [backdropDismiss]="false">
+    <ion-modal
+      [isOpen]="isModalOpen"
+      [backdropDismiss]="false"
+      cssClass="custom-modal"
+    >
       <ng-template>
         <ion-header>
-          <ion-toolbar style="padding: 12px;">
-            <ion-buttons slot="end">
-              <ion-button class="btn btn-primary" (click)="setPrivacyModal(false)">Cancel</ion-button>
-            </ion-buttons>
+          <ion-toolbar style="padding: 12px">
+            <img
+              src="../../assets/cancel.png"
+              style="width: 5%; float: right"
+              (click)="setPrivacyModal(false)"
+            />
             <ion-title>Terms &amp; Privacy Policy</ion-title>
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <ion-item>
-            <div class="container">
-              <div class="container">
-                <div class="section-heading">
-                  <h1 class="title wow fadeInDown" data-wow-delay=".3s">
-                    Terms of Use Agreement for Revords LLC
-                  </h1>
-                  <p>Last Updated: October 20, 2023</p>
-                </div>
-                <div class="container">
-                  <p>
-                    This Terms of Use Agreement (the "Terms") sets forth the standards
-                    of use of the Revords LLC ("Revords" or "Our" or "Us") Online
-                    Service. By using Revords.com (the "Site") that you (the "User" or
-                    "You") agree to these terms and conditions. If you do not agree to
-                    the terms and conditions of this agreement, you should immediately
-                    cease all usage of this website.
-                  </p>
-                  <br>
-                  <p>
-                    We reserve the right, at any time, to modify, alter, or update the
-                    terms and conditions of this agreement without prior notice.
-                    Modifications shall become effective immediately upon being posted
-                    at Revords.com. Your continued use of the Service after amendments
-                    are posted constitutes an acknowledgment and acceptance of the Terms
-                    and its modifications.
-                  </p>
-                  <br>
-
-                  <h4>1. Acceptable Use</h4>
-                  <p>You agree to the following conditions of use of the Site:</p>
-                  <p>
-                    -Improper Use of the Site: You shall not use the Site in any manner
-                    prohibited by any federal, state, or local laws, rules, and/or
-                    regulations.
-                    <br>
-                    -Utilization of Network Resources: The abuse, misuse, disruption,
-                    degradation, and/or other compromise of Revords’s network resources
-                    and services by any User is prohibited.
-                  </p>
-
-                  <h4>2. Access to Site</h4>
-                  <p>
-                    By using or accessing the Site, you represent and warrant to us that
-                    you:
-                  </p>
-                  <p>
-                    - Are eighteen (18) years of age or older. <br>- Are not currently
-                    restricted from using the Site, or not otherwise prohibited from
-                    having an account with us. <br>- Are not a competitor of Revords,
-                    or engaged in any business or activity, directly or indirectly, that
-                    could be competitive with the business or activities of Revords.
-                  </p>
-                  <br>
-
-                  <h4>3. Description of Service</h4>
-                  <p>
-                    We may disclose your personal information under the following
-                    circumstances:
-                  </p>
-                  <br>
-                  <p>
-                    Revords LLC provides the User with loyalty rewards software
-                    ("Services"). To use the Services, the User must: <br>
-                    1. Provide all equipment necessary for the use of the Services.
-                    <br>
-                    2. Create a user account to access the Services. <br>
-                    3. Pay any fees related to the Services. <br>
-                  </p>
-                  <br>
-
-                  <h4>4. Disclaimer of Warranties</h4>
-                  <p>
-                    The Site is provided by Revords LLC on an "as is" and "as available"
-                    basis. Revords LLC makes no representations or warranties of any
-                    kind, express or implied, regarding the use or the results of this
-                    website.
-                  </p>
-                  <br>
-
-                  <h4>5. Indemnification</h4>
-                  <p>
-                    You shall indemnify, defend, and hold harmless Revords LLC from and
-                    against any and all claims related to or arising out of: <br>
-                    - Your negligence or wilful act or omission. <br>
-                    - Your misuse of the Site. <br>
-                    - Your breach of any term, condition, representation, warranty,
-                    duty, and/or obligations set forth in the Terms. <br>
-                  </p>
-                  <br>
-
-                  <h4>6. Modifications and Interruption to Service</h4>
-                  <p>
-                    Revords LLC reserves the right to modify or discontinue the Service
-                    with or without notice to the User.
-                  </p>
-                  <br>
-
-                  <h4>7. Third-Party Sites</h4>
-                  <p>
-                    Our website may include links to other sites on the Internet that
-                    are owned and operated by online merchants and other third parties.
-                  </p>
-                  <br>
-
-                  <h4>8. Disclaimer Regarding Accuracy of Vendor Information</h4>
-                  <p>
-                    Product specifications and other information have either been
-                    provided by the Vendors or collected from publicly available
-                    sources.
-                  </p>
-                  <br>
-
-                  <h4>9. Governing Jurisdiction of the Courts</h4>
-                  <p>
-                    Our website is operated and provided in the jurisdiction where
-                    Revords LLC is registered.
-                  </p>
-                  <br>
-
-                  <h4>10. Compliance with Laws</h4>
-                  <p>
-                    User assumes all knowledge of applicable law and is responsible for
-                    compliance with any such laws.
-                  </p>
-                  <br>
-
-                  <h4>11. Copyright and Trademark Information</h4>
-                  <p>
-                    All content included or available on Revords.com is protected by
-                    copyright with all rights reserved.
-                  </p>
-                  <br>
-
-                  <h4>12. Emails and Text Messages</h4>
-                  <p>
-                    By accepting these Terms, you grant us, our assigns, successors, or
-                    servicing agents’ permission to send email and/or short message
-                    service (SMS) notifications or messages to any phone number(s) you
-                    provide to us in connection with your relationship with us. This
-                    permission covers any phone numbers you provide both now and in the
-                    future. For the purposes of these Terms, "Notifications" refers to
-                    any SMS (text message), email message, or similar communications
-                    from us to you regarding your association with Revords. This
-                    includes, but is not limited to, information related to payments,
-                    account details, loyalty rewards, marketing, user account
-                    information, and other relevant account-related information.
-                    <br><br>
-                    If you choose to receive Notifications on your mobile device and/or
-                    email as part of the Site or services, you hereby authorize Revords
-                    to send Notifications to you and agree to be bound by the additional
-                    terms presented on our Site. To receive Notifications on a mobile
-                    device, you must be the authorized user of the mobile device, and
-                    you warrant that you are. SMS messages may be sent to mobile devices
-                    using the wireless carriers listed on our Site. You acknowledge
-                    that, during the term of this agreement, you have the option to opt
-                    in or opt out of receiving Notifications. If you encounter any
-                    issues with Notifications, you can contact us at info&#64;revords.com To
-                    stop receiving SMS messages, text STOP to (888) 409-9323. To cease
-                    receiving email messages, email info&#64;revords.com with UNSUBSCRIBE in
-                    the subject line. The number of Notifications you receive will vary
-                    based on Site activity. It's important to note that receiving
-                    Notifications, including SMS messages, may lead to additional
-                    messaging or data charges from your wireless carrier for which you
-                    are solely responsible.
-                  </p>
-                  <br>
-
-                  <h4>13. Term and Termination</h4>
-                  <p>
-                    The Terms will become effective upon your first time accessing
-                    Revords.com and will remain in effect until terminated.
-                  </p>
-                  <br>
-
-                  <h4>14. Confidentiality</h4>
-                  <p>
-                    Revords LLC shall use reasonable precautions to maintain the
-                    confidentiality of the information you have provided to us.
-                  </p>
-                  <br>
-
-                  <h4>15. Other Terms</h4>
-                  <p>
-                    - Force Majeure: Revords LLC shall not be liable for any delay or
-                    failure in performance due to force majeure conditions. <br>
-                    - Assignment and Transfer: You are strictly prohibited from
-                    assigning any right, obligation, or duty, in whole or in part,
-                    without the prior written consent of Revords LLC. <br>
-                    - Entire Understanding: The Terms constitute the entire
-                    understanding between you and Revords LLC related to the subject
-                    matter hereof. <br>
-                    <br>
-
-                    Questions: If you have any questions regarding the Site, the Terms
-                    or the Privacy Policy, you may contact info&#64;revords.com
-                  </p>
-                  <br>
-                </div>
-              </div>
-              <div class="container pt-4">
-                <div class="section-heading">
-                  <h1 class="title wow fadeInDown pt-5" data-wow-delay=".3s">
-                    Revords LLC Privacy Policy
-                  </h1>
-                  <p>Last Updated: November 27, 2023</p>
-                  <p>
-                    Revords LLC is committed to protecting your privacy and we adhere to
-                    the General Data Protection Regulation.
-                  </p>
-                </div>
-                <div class="container">
-                  <p>
-                    Welcome to Revords LLC. This Privacy Policy (“Privacy Policy”) is
-                    designed to inform you about how Revords LLC, its subsidiaries, and
-                    affiliated companies (“Revords,” “we,” “our,” or “us”) collect, use,
-                    share, and protect the personal information of individuals who
-                    interact with our website located at www.Revords.com (“Site”), our
-                    mobile application (“App”), or any other platform we operate
-                    (“Platform”). These are collectively referred to as the “Service.”
-                    This policy also extends to transactional information of individuals
-                    who make purchases from merchants that have subscribed to our
-                    Platform, known as “Rewards Providers.”
-                  </p>
-                  <br>
-                  <p>
-                    By accessing or using the Service, you agree to this Privacy Policy
-                    and our Terms of Use. If you do not agree with our policies and
-                    practices, your choice is not to use our Service.
-                  </p>
-                  <br>
-
-                  <h4>Types of Information We Collect</h4>
-                  <p>Information You Voluntarily Provide to Us</p>
-
-                  <p>
-                    When you sign up for a Revords account through our Site, App, or
-                    Platform, or when you contact us for inquiries or respond to our
-                    surveys, we collect personal information that you voluntarily
-                    provide. This information may include, but is not limited to, your
-                    name, phone number, email address, birthdate, and any messages you
-                    send or receive through the Service.
-                  </p>
-                  <br><br>
-                  <p>Automatically Collected Information</p>
-
-                  <p>
-                    When you make a purchase or otherwise interact with one of our
-                    Rewards Providers, we automatically collect transactional
-                    information. This may include details such as the items purchased,
-                    their prices, the total amount paid, tip amount, the payment card
-                    used, the name associated with the payment card, and the billing
-                    address.
-                  </p>
-                  <br><br>
-
-                  <h4>How We Use Your Information</h4>
-                  <p>
-                    We use the personal information you provide in a manner consistent
-                    with this Privacy Policy. For example, if you contact us by email,
-                    we will use the information you provide to answer your question or
-                    resolve your issue. We also use your transactional data to
-                    facilitate your transactions with Rewards Providers, and if you are
-                    a Revords accountholder, to automatically award you rewards points
-                    and/or provide you with other offers that may interest you.
-                  </p>
-                  <br>
-
-                  <h4>Disclosure of Your Information</h4>
-                  <p>
-                    We may disclose your personal information under the following
-                    circumstances:
-                  </p>
-                  <br>
-                  <p>
-                    A. Rewards Providers: We may share your personal and transactional
-                    information with Rewards Providers for various purposes, including
-                    for the Rewards Provider to redeem and validate your rewards, send
-                    you customized offers, and for legal proceedings affecting Revords
-                    or the Rewards Provider.
-                    <br><br>B. Business Transfers: In the event of a corporate sale,
-                    merger, reorganization, dissolution, or similar event, your personal
-                    information may be part of the transferred assets. <br><br>C.
-                    Related Companies: We may share your personal information with our
-                    Related Companies, but only in a manner consistent with this Privacy
-                    Policy. <br><br>D. Agents, Consultants, and Service Providers:
-                    We may employ agents or service providers to perform certain
-                    business-related functions. When we do, we only provide them with
-                    the information they need to perform their specific function.
-                    <br><br>E. Legal Requirements: We may disclose your information
-                    if required by law or for other specific reasons outlined in this
-                    policy.
-                  </p>
-                  <br>
-
-                  <h4>No Sharing of Information Clause</h4>
-                  <p>
-                    Revords LLC is committed to safeguarding the confidentiality of your personal information. We do not
-                    share, sell, rent, or disclose your personal information to third parties for their direct marketing
-                    purposes without your explicit consent, except as outlined in this Privacy Policy. Specifically,
-                    subscriber information, including but not limited to mobile information, will not be shared with
-                    third parties or affiliates for marketing or promotional purposes, excluding text messaging
-                    originator opt-in data and consent; this information will not be shared with any third parties.
-                  </p>
-                  <br>
-
-                  <h4>Your Choices and Opt-Outs</h4>
-                  <p>
-                    You have the option to opt-out of certain tracking and information
-                    sharing features. You may stop receiving SMS messages from us by
-                    replying STOP to any received SMS message.
-                  </p>
-                  <br>
-
-                  <h4>California Privacy Rights</h4>
-                  <p>
-                    If you are a California resident, you have specific rights regarding
-                    the access and deletion of your personal information under the
-                    California Consumer Privacy Act (CCPA).
-                  </p>
-                  <br>
-
-                  <h4>Security Measures</h4>
-                  <p>
-                    Revords has put in place essential physical, organizational, and
-                    technical safeguards to protect against any unauthorized or unlawful
-                    handling of the data we gather. We have also implemented measures to
-                    prevent unintentional loss, destruction, or harm to your personal
-                    information. While no system can be entirely immune to security
-                    threats, the precautions taken by Revords considerably diminish the
-                    probability of a data security breach.
-                  </p>
-                  <br>
-
-                  <h4>Changes to This Privacy Policy</h4>
-                  <p>
-                    We reserve the right to update or modify this Privacy Policy at any
-                    time. We will provide appropriate notice of such changes, and your
-                    continued use of the Service after any changes signifies your
-                    acceptance of the updated Privacy Policy.
-                  </p>
-                  <br>
-
-                  <h4>Contact Information</h4>
-                  <p>
-                    For any questions about this Privacy Policy or to request access to,
-                    update, correct, or delete your personal information, you may
-                    contact us at info&#64;revords.com or at (888) 409-9323.
-                  </p>
-                  <br>
-                </div>
-              </div>
-            </div>
-          </ion-item>
+          <iframe
+            class="webPage"
+            src="https://revords.com/RevordsT&C.html"
+            frameborder="0"
+            style="width: 100%; height: 100%"
+          ></iframe>
         </ion-content>
       </ng-template>
     </ion-modal>

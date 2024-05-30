@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { RevordSummaryPageRoutingModule } from './revord-summary-routing.module';
 
 import { RevordSummaryPage } from './revord-summary.page';
+import { CountdownComponent } from 'ngx-countdown';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RevordSummaryPageRoutingModule
+    RevordSummaryPageRoutingModule,
+    CountdownComponent
   ],
   declarations: [RevordSummaryPage]
 })

@@ -432,12 +432,12 @@ body {
   margin: 3% 3% 0% 0%;
   font-size: 100%;
   font-weight: 700;
-  color: #7b5e5e;
+  color: #a88e6a;
   z-index: 1;
   right: 0%;
   top: 0%;
   position: absolute;
-  background: conic-gradient(#ffc107 var(--progress), gray 0deg);
+  background:  #f8f8f8;
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 2rem;
@@ -448,7 +448,6 @@ body {
 }
 
 .countDownText::after {
-  content: attr(data-progress);
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -462,6 +461,10 @@ body {
 }
 
 @keyframes turn_in {
+  0% {
+    background: conic-gradient(#ffc107 calc(var(--progress) * 1), gray 0deg);
+  }
+
   5% {
     background: conic-gradient(#ffc107 calc(var(--progress) * 0.95), gray 0deg);
   }

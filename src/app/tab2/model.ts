@@ -46,3 +46,18 @@ export class ActivityHistory {
     spinWheelText: string;
     isSpinRedeem: boolean;
 }
+
+// export class DynamicFields {
+//     termsCondText1: string;
+//     termsCondText2: string;
+//     isOptInRequired: boolean;
+//     counterNewMember: number;
+//     conuterNewOptIn: number;
+//     counterBeforeSpin: number;
+//     counterAfterSpin: number;
+//     counterRevordSummary: number;
+//     counterCustomerDetails: number;
+//     counterFavorite: number;
+//     customerBGPath1: string;
+//     customerBGPath2: string;
+// }

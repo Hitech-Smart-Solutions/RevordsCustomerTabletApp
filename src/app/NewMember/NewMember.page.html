@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true">
-  <div class="loginbg"></div>
-  <div class="loginbgblack"></div>
+  <div class="loginbg" [ngStyle]="{'background-image': 'url(' + bgImg + ')' }"></div>
+  <!-- <div class="loginbgblack"></div> -->
   <div class="RewardContainer" *ngIf="!isLoading">
     <div class="body" [formGroup]="multistep">
       <div class="wrapper" formGroupName="addMemberDetails">
@@ -18,13 +18,12 @@
           (click)="back()"
         />
 
-        <div
-          class="countDownText"
-          id="progress-bar"
-          data-progress="120"
-          style="--progress: {{prog1}}%;"
-        >
-          {{this.value/1000}}
+        <div class="countDownText">
+          <countdown
+            #cd
+            (event)="handleEvent($event)"
+            [config]="config"
+          ></countdown>
         </div>
 
         <h3 style="text-align: center; color: #213139">
@@ -148,11 +147,11 @@
             </div>
           </ion-col>
         </div>
-        <p style="margin-top: 3%; color: #213139">
-          You agree to receive occasional updates and promotions via text
-          messages.<span style="color: #c90000">*</span>
+        <p style="margin-top: 3%; color: #213139" *ngIf="dynamicField != undefined && dynamicField.isOptInRequired">
+          You agree to receive occasional updates and promotions via text messages.
+          <span style="color: #c90000">*</span>
         </p>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" *ngIf="dynamicField != undefined && dynamicField.isOptInRequired">
           <ion-radio-group value="true" formControlName="optIn">
             <ion-radio value="true" labelPlacement="end"
               >Yes (opt-in for SMS)</ion-radio
@@ -182,10 +181,15 @@
   <div [ngStyle]="{'display':displayPopup}" *ngIf="isOptInPopupRequired">
     <div id="popup" class="popup">
       <!-- <img src="../../assets/PopupBGImg.jpg" alt=""> -->
-      <h2 class="mb-2">Great!</h2>
+      <!-- <h2 class="mb-2">Great!</h2> -->
       <div [innerHTML]="OptInPopupText"></div>
-      <button (click)="closePopupOptin()" class="btn btn-success p-2 m-3">
+      <button
+        (click)="closePopupOptin()"
+        class="btn p-2 m-3"
+        style="background-color: #3e78a3; color: #fff; font-size: 20px"
+      >
         Continue
+        <img style="width: 4%" src="./assets/arrowright.png" />
       </button>
     </div>
 

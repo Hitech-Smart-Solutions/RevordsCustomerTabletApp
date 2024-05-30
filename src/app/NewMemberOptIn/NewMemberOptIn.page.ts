@@ -15,6 +15,12 @@ import {
 } from '@angular/forms';
 import * as CONSTANTS from '../api/services/Constants';
 import { async } from '@angular/core/testing';
+import { Subscription, interval } from 'rxjs';
+import {
+  CountdownComponent,
+  CountdownConfig,
+  CountdownEvent,
+} from 'ngx-countdown';
 
 @Component({
   selector: 'app-NewMemberOptIn',
@@ -22,10 +28,7 @@ import { async } from '@angular/core/testing';
   styleUrls: ['NewMemberOptIn.page.scss'],
 })
 export class NewMemberOptInPage {
-  countDown: any;
-  myInterval: any;
-  value: any;
-  prog1: any;
+  prog1NewMemberOptIn: any;
   members: any;
   response: any;
   display = '';
@@ -115,6 +118,18 @@ export class NewMemberOptInPage {
   isAgeRestriction: boolean;
   isOptInPopupRequired: boolean;
   OptInPopupText: string;
+  dynamicField: any;
+  bgImg: any = CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
+  alert: any;
+
+  configNewOpt: CountdownConfig = {
+    leftTime:
+      60 *
+      (JSON.parse(localStorage.getItem('DynamicField') || '{}')
+        .conuterNewOptIn /
+        60),
+    formatDate: ({ date }) => `${date / 1000}`,
+  };
 
   constructor(
     private router: Router,
@@ -128,9 +143,6 @@ export class NewMemberOptInPage {
     private toastCtrl: ToastController,
     private alertCtrl: AlertController
   ) {
-    // let val = localStorage.getItem('isAgeRestriction');
-    // this.isAgeRestriction = val != null && val != '' && val != undefined ? val : false;
-
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params && params['memberPhone']) {
         this.phoneNumber = JSON.parse(params['memberPhone']);
@@ -174,34 +186,42 @@ export class NewMemberOptInPage {
     });
   }
 
-  ionViewWillEnter() {
-    this.countDown = 30;
-    this.value = 30000;
-    this.myInterval = setInterval(() => {
-      this.counter(30);
-    }, 1000);
+  async ionViewWillEnter() {
+    this.dynamicField = JSON.parse(
+      localStorage.getItem('DynamicField') || '{}'
+    );
+
+    if (Object.keys(this.dynamicField).length == 0) {
+      if (this.alert != undefined && this.alert != null) {
+        this.alert.dismiss();
+      }
+      this.router.navigate(['tab1']);
+
+      const toast = await this.toastCtrl.create({
+        message: 'Something went wrong, Please try again!',
+        duration: 3500,
+        cssClass: 'custom-toastDanger',
+      });
+      toast.present();
+    }
   }
 
   ngOnInit() {}
 
-  counter(numbercheck: any) {
-    const progressBar = document.getElementById('progress-bar') as HTMLElement;
-    if (progressBar != null) {
-      this.value = this.value - 1000;
-      this.prog1 = ((numbercheck - this.value / 1000) * 100) / numbercheck;
-      progressBar.setAttribute('data-progress', (this.value / 1000).toString());
-      if (this.value <= 1000) {
-        clearInterval(this.myInterval);
-        this.countDown = 30;
-        this.value = 30000;
-        this.router.navigate(['tab1']);
+  handleEventNewOpt(e: CountdownEvent) {
+    if (e.left <= 0) {
+      if (this.alert != undefined && this.alert != null) {
+        this.alert.dismiss();
       }
+      this.router.navigate(['tab1']);
     }
   }
 
   back() {
+    if (this.alert != undefined && this.alert != null) {
+      this.alert.dismiss();
+    }
     this.router.navigate(['/tab1']);
-    clearInterval(this.myInterval);
   }
 
   async getSpinWheelConfig(memberId: any) {
@@ -241,9 +261,12 @@ export class NewMemberOptInPage {
   }
 
   async submitData() {
-    if (this.AddMemberDetails.optIn.value == '') {
+    if (
+      this.AddMemberDetails.optIn.value == '' &&
+      this.dynamicField.isOptInRequired == true
+    ) {
       const toast = await this.toastCtrl.create({
-        message: 'Please select one option for opt-in!!',
+        message: 'Please select one option for opt-in!',
         duration: 3500,
         cssClass: 'custom-toast',
       });
@@ -254,8 +277,11 @@ export class NewMemberOptInPage {
         this.AddMemberDetails.optIn.value == ''
           ? false
           : this.AddMemberDetails.optIn.value;
-      if (optin.toString() == 'false') {
-        const alert = await this.alertCtrl.create({
+      if (
+        optin.toString() == 'false' &&
+        this.dynamicField.isOptInRequired == true
+      ) {
+        this.alert = await this.alertCtrl.create({
           header: "Are you sure you don't want to opt-in ? ",
           buttons: [
             {
@@ -272,9 +298,12 @@ export class NewMemberOptInPage {
             },
           ],
         });
-        await alert.present();
+        await this.alert.present();
       } else {
-        if (this.isOptInPopupRequired == true) {
+        if (
+          this.isOptInPopupRequired == true &&
+          this.dynamicField.isOptInRequired == true
+        ) {
           this.displayPopup = 'block';
         } else {
           this.Save();
@@ -291,7 +320,7 @@ export class NewMemberOptInPage {
         // this.router.navigate(['/tab1']);
         const toast = await this.toastCtrl.create({
           message:
-            'Please confirm that you are at least 21 years old to proceed!!',
+            'Please confirm that you are at least 21 years old to proceed!',
           duration: 3500,
           cssClass: 'custom-toastDanger',
         });
@@ -318,46 +347,58 @@ export class NewMemberOptInPage {
 
         this._memberProfile
           .PutSmsOptin(idte, smsoptInValue, overAgedValue)
-          .subscribe((data) => {
-            let currentDate = CONSTANTS.ISODate();
-            this.memberVistLog.MemberId = this.newMemberProfileData.id;
-            this.memberVistLog.SignIn = currentDate;
-            this.memberVistLog.SourceId = this.SourceID;
-            this.memberVistLog.BusinessLocationId = this.BusinessLocationID;
-            this.memberVistLog.StateId = 3;
-            this.memberVistLog.IsActive = true;
-            this.memberVistLog.CreatedBy = 1;
-            this.memberVistLog.CreatedDate = currentDate;
-            this.memberVistLog.LastModifiedBy = 1;
-            this.memberVistLog.LastModifiedDate = currentDate;
-            try {
-              this._memberProfile
-                .PostMemberVisitLog(this.memberVistLog)
-                .subscribe(async (data) => {
-                  this.memberVisitLogRes = data;
-                  if (this.memberVisitLogRes.id > 0) {
-                    localStorage.removeItem('memberDetails');
-                    this.m.name = this.newMemberName;
-                    this.m.currentPoints =
-                      this.newMemberProfileData.currentpoints;
-                    this.m.memberId = this.newMemberProfileData.id;
-                    this.m.memberTableID = this.newMemberProfileData.memberId;
-                    this.m.memberSince = this.newMemberProfileData.membersince;
-                    this.m.badgeColor = this.newMemberProfileData.badgeColor;
-                    this.m.memberImg = this.memberImage;
+          .subscribe(
+            (data) => {
+              let currentDate = CONSTANTS.ISODate();
+              this.memberVistLog.MemberId = this.newMemberProfileData.id;
+              this.memberVistLog.SignIn = currentDate;
+              this.memberVistLog.SourceId = this.SourceID;
+              this.memberVistLog.BusinessLocationId = this.BusinessLocationID;
+              this.memberVistLog.StateId = 3;
+              this.memberVistLog.IsActive = true;
+              this.memberVistLog.CreatedBy = 1;
+              this.memberVistLog.CreatedDate = currentDate;
+              this.memberVistLog.LastModifiedBy = 1;
+              this.memberVistLog.LastModifiedDate = currentDate;
+              try {
+                this._memberProfile
+                  .PostMemberVisitLog(this.memberVistLog)
+                  .subscribe(async (data) => {
+                    this.memberVisitLogRes = data;
+                    if (this.memberVisitLogRes.id > 0) {
+                      localStorage.removeItem('memberDetails');
+                      this.m.name = this.newMemberName;
+                      this.m.currentPoints =
+                        this.newMemberProfileData.currentpoints;
+                      this.m.memberId = this.newMemberProfileData.id;
+                      this.m.memberTableID = this.newMemberProfileData.memberId;
+                      this.m.memberSince =
+                        this.newMemberProfileData.membersince;
+                      this.m.badgeColor = this.newMemberProfileData.badgeColor;
+                      this.m.memberImg = this.memberImage;
 
-                    localStorage.setItem(
-                      'memberDetails',
-                      JSON.stringify(this.m)
-                    );
+                      localStorage.setItem(
+                        'memberDetails',
+                        JSON.stringify(this.m)
+                      );
 
-                    await this.getReduceFnSpinwheelConfig();
-                  }
-                });
-            } catch (error) {
+                      await this.getReduceFnSpinwheelConfig();
+                    }
+                  });
+              } catch (error) {
+                this.isLoading = false;
+              }
+            },
+            async (error) => {
               this.isLoading = false;
+              const toast = await this.toastCtrl.create({
+                message: 'Something went wrong, Please try again!',
+                duration: 3500,
+                cssClass: 'custom-toast',
+              });
+              toast.present();
             }
-          });
+          );
       } else {
         let currentDate = CONSTANTS.ISODate();
 
@@ -389,38 +430,49 @@ export class NewMemberOptInPage {
             try {
               this._memberProfile
                 .PostMemberVisitLog(this.memberVistLog)
-                .subscribe((data) => {
-                  this.memberVisitLogRes = data;
-                  if (this.memberVisitLogRes.id > 0) {
-                    this._memberProfile
-                      .GetMemberProfileByPhoneNo(
-                        this.BusinessGroupID,
-                        this.BusinessLocationID,
-                        this.phoneNumber
-                      )
-                      .subscribe(async (resProfile: any) => {
-                        let d = resProfile;
+                .subscribe(
+                  (data) => {
+                    this.memberVisitLogRes = data;
+                    if (this.memberVisitLogRes.id > 0) {
+                      this._memberProfile
+                        .GetMemberProfileByPhoneNo(
+                          this.BusinessGroupID,
+                          this.BusinessLocationID,
+                          this.phoneNumber
+                        )
+                        .subscribe(async (resProfile: any) => {
+                          let d = resProfile;
 
-                        localStorage.removeItem('memberDetails');
-                        this.m.name = this.newMemberName;
-                        this.m.currentPoints =
-                          this.newMemberProfileRes.currentPoints;
-                        this.m.memberId = this.newMemberProfileRes.id;
-                        this.m.memberTableID =
-                          this.newMemberProfileRes.memberId;
-                        this.m.memberSince =
-                          this.newMemberProfileRes.createdDate;
-                        this.m.badgeColor = d[0].badgeColor;
-                        this.m.memberImg = this.memberImage;
-                        localStorage.setItem(
-                          'memberDetails',
-                          JSON.stringify(this.m)
-                        );
+                          localStorage.removeItem('memberDetails');
+                          this.m.name = this.newMemberName;
+                          this.m.currentPoints =
+                            this.newMemberProfileRes.currentPoints;
+                          this.m.memberId = this.newMemberProfileRes.id;
+                          this.m.memberTableID =
+                            this.newMemberProfileRes.memberId;
+                          this.m.memberSince =
+                            this.newMemberProfileRes.createdDate;
+                          this.m.badgeColor = d[0].badgeColor;
+                          this.m.memberImg = this.memberImage;
+                          localStorage.setItem(
+                            'memberDetails',
+                            JSON.stringify(this.m)
+                          );
 
-                        await this.getReduceFnSpinwheelConfig();
-                      });
+                          await this.getReduceFnSpinwheelConfig();
+                        });
+                    }
+                  },
+                  async (error) => {
+                    this.isLoading = false;
+                    const toast = await this.toastCtrl.create({
+                      message: 'Something went wrong, Please try again!',
+                      duration: 3500,
+                      cssClass: 'custom-toast',
+                    });
+                    toast.present();
                   }
-                });
+                );
             } catch (error) {
               this.isLoading = false;
             }
@@ -469,8 +521,8 @@ export class NewMemberOptInPage {
 
           // if (this.memberLifeTimeVisit == 0) {
           localStorage.setItem('OPTS', JSON.stringify(this._defaultOpts));
+          // clearInterval(this.myIntervalNewMemberOptIn);
           this.router.navigate(['/tab2']);
-          clearInterval(this.myInterval);
           // } else {
           //   if (this._defaultOpts[0].configName == 'Config 1') {
           //     this.router.navigate(['/customer-details']);
@@ -486,8 +538,8 @@ export class NewMemberOptInPage {
         },
         async (error) => {
           if (error.status == 404) {
+            // clearInterval(this.myIntervalNewMemberOptIn);
             this.router.navigate(['/customer-details']);
-            clearInterval(this.myInterval);
             this.isLoading = false;
             this.display = '';
             this.phoneNumber = '';

@@ -24,7 +24,7 @@ import { MembersVistLog, Model } from '../tab2/model';
     GetMemberProfileService,
     HttpClient,
     Model,
-    MembersVistLog
+    MembersVistLog,
   ],
 })
 export class Tab1PageModule {}

@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { FavoritesPageRoutingModule } from './Favorites-routing.module';
 
 import { FavoritesPage } from './Favorites.page';
+import { CountdownComponent } from 'ngx-countdown';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FavoritesPageRoutingModule
+    FavoritesPageRoutingModule,
+    CountdownComponent
   ],
   declarations: [FavoritesPage]
 })
