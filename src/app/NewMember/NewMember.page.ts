@@ -146,13 +146,11 @@ export class NewMemberPage {
         this.alert.dismiss();
       }
       this.router.navigate(['tab1']);
-
-      const toast = await this.toastCtrl.create({
-        message: 'Something went wrong, Please try again!',
-        duration: 3500,
-        cssClass: 'custom-toastDanger',
-      });
-      toast.present();
+      this._memberProfile.toastMessage(
+        'Something went wrong. Please try again.',
+        2500,
+        'custom-toastDanger'
+      );
     }
   }
 
@@ -247,12 +245,11 @@ export class NewMemberPage {
         this.AddMemberDetails.optIn.value == '') &&
       this.dynamicField.isOptInRequired == true
     ) {
-      const toast = await this.toastCtrl.create({
-        message: 'Please select one option for opt-in!',
-        duration: 3500,
-        cssClass: 'custom-toast',
-      });
-      toast.present();
+      this._memberProfile.toastMessage(
+        'Please select one option to opt-in.',
+        2500,
+        'custom-toast'
+      );
     } else {
       let currentDate = CONSTANTS.ISODate();
       let currentYear = new Date().getFullYear();
@@ -382,24 +379,21 @@ export class NewMemberPage {
           this.submitData();
         } else {
           // this.router.navigate(['/tab1']);
-          const toast = await this.toastCtrl.create({
-            message:
-              'Please confirm that you are at least 21 years old to proceed!',
-            duration: 3500,
-            cssClass: 'custom-toastDanger',
-          });
-          toast.present();
+          this._memberProfile.toastMessage(
+            'Please confirm that you are at least 21 years old to proceed.',
+            3000,
+            'custom-toastDanger'
+          );
         }
       } else {
         this.submitData();
       }
     } else {
-      const toast = await this.toastCtrl.create({
-        message: 'Please enter valid email!',
-        duration: 3500,
-        cssClass: 'custom-toast',
-      });
-      toast.present();
+      this._memberProfile.toastMessage(
+        'Please enter a valid email address.',
+        2500,
+        'custom-toast'
+      );
     }
   }
 
@@ -477,20 +471,18 @@ export class NewMemberPage {
           if (error.status == 409) {
             
             this.router.navigate(['/tab1']);
-            const toast = await this.toastCtrl.create({
-              message: "You're already a member, Please Signin again!",
-              duration: 3500,
-              cssClass: 'custom-toast',
-            });
-            toast.present();
+            this._memberProfile.toastMessage(
+              "You're already a member. Please sign in again!",
+              2500,
+              'custom-toast'
+            );
           } else {
             this.isLoading = false;
-            const toast = await this.toastCtrl.create({
-              message: "Something went wrong, Please try again!",
-              duration: 3500,
-              cssClass: 'custom-toast',
-            });
-            toast.present();
+            this._memberProfile.toastMessage(
+              "Something went wrong. Please try again.",
+              3500,
+              'custom-toast'
+            );
           }
         }
       );

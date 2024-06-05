@@ -19,7 +19,7 @@ export class CustomerDetailsPage implements OnInit {
   autopilotData: any;
   rewardData: any = [];
   showPromotionData: boolean = false;
-  showAutopilotData: boolean = false;
+  showAutopilotData: boolean = false; 
   showRewardData: boolean = false;
   memberId: any;
   memberTableId: any;
