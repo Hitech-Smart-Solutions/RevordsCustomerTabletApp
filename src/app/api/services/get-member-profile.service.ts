@@ -4,38 +4,30 @@ import * as CONSTANTS from './Constants';
 import { MembersVistLog, ActivityHistory } from '../../tab2/model';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetMemberProfileService {
   postId: any;
-  // private DynamicFieldData = new BehaviorSubject(null);
-  // private sharedDataSubject = new BehaviorSubject<string>('Initial Value');
   private dataSubject = new BehaviorSubject<any>(null);
   data$: Observable<any> = this.dataSubject.asObservable();
 
-  
-
-  constructor(private http: HttpClient) {}
-  // members(PhoneNo: any) {
-  //   return this.http.get(CONSTANTS.API_ENDPOINT + `MemberProfiles/GetMemberProfileByPhoneNo/1/${PhoneNo}`);
-  // }
-  // updateSharedData(newValue: string) {
-  //   this.sharedDataSubject.next(newValue);
-  // }
+  constructor(private http: HttpClient, private toastCtrl: ToastController) {}
 
   setData(data: any) {
     this.dataSubject.next(data);
   }
-  // Expose an observable to subscribe to
-  // getSharedData(): Observable<string> {
-  //   return this.sharedDataSubject.asObservable();
-  // }
 
-  // getCurrentValue(): string {
-  //   return this.sharedDataSubject.value;
-  // }
+  async toastMessage(message: string, duration: number, cssClass: string) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: duration,
+      cssClass: cssClass,
+    });
+    toast.present();
+  }
 
   PostMemberVisitLog(membersVistLog: MembersVistLog) {
     return this.http
@@ -206,7 +198,7 @@ export class GetMemberProfileService {
       );
   }
 
-  GetBusinessProfilesForFavorite(memberId: any, businessLocationId:any) {
+  GetBusinessProfilesForFavorite(memberId: any, businessLocationId: any) {
     return this.http.get(
       CONSTANTS.API_ENDPOINT +
         `BusinessProfiles/GetBusinessProfilesForFavorite/${memberId}/${businessLocationId}`

@@ -15,6 +15,8 @@ import { Market } from '@awesome-cordova-plugins/market/ngx';
 import { BackgroundService } from './api/services/backgroundService';
 import { BackgroundMode } from '@awesome-cordova-plugins/background-mode/ngx';
 import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
+import { InAppUpdate } from '@awesome-cordova-plugins/in-app-update/ngx';
+import { Deploy } from 'cordova-plugin-ionic/dist/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,7 +29,7 @@ import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
     ReactiveFormsModule
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },Deploy,
     GetMemberProfileService,
     HttpClient,
     Model,
@@ -37,7 +39,8 @@ import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
     AppVersion,    
     BackgroundMode,
     BackgroundService,
-    Market
+    Market,
+    InAppUpdate
   ],
   bootstrap: [AppComponent],
 })

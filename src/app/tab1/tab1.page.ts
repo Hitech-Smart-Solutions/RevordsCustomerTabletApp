@@ -86,8 +86,8 @@ export class Tab1Page {
   }
 
   ionViewWillEnter() {
-    this.GetChecklistByBusinessGroupID();
-    this.GetDynamicFieldsByBusinessGroupId();
+    this.getTextconfigurationByBusinessGroupID();
+    this.getDynamicFieldsByBusinessGroupId();
     this._memberProfile
       .GetBusinessProfilesByID(this.BusinessLocationID)
       .subscribe((data: any) => {
@@ -100,15 +100,6 @@ export class Tab1Page {
   }
 
   ngOnInit() {}
-
-  async DisplayToastSignIn() {
-    const toast = await this.toastCtrl.create({
-      message: "You're already Sign In!",
-      duration: 3500,
-      cssClass: 'custom-toast',
-    });
-    toast.present();
-  }
 
   async signUp() {
     if (!this.isModalOpen) {
@@ -147,7 +138,11 @@ export class Tab1Page {
                         this.display = '';
                         this.phoneNumber = '';
                         this.isLoading = false;
-                        this.DisplayToastSignIn();
+                        this._memberProfile.toastMessage(
+                          "You're already signed in!",
+                          2500,
+                          'custom-toast'
+                        );
                       } else {
                         this.m.name = this.memberProfileExist[0].name;
                         this.m.currentPoints =
@@ -348,12 +343,11 @@ export class Tab1Page {
                     this.isLoading = false;
                     this.router.navigate(['/NewMemberOptIn'], navigationExtras);
                   } else {
-                    const toast = await this.toastCtrl.create({
-                      message: 'Something went wrong, Try again!',
-                      duration: 5000,
-                      cssClass: 'custom-toast',
-                    });
-                    toast.present();
+                    this._memberProfile.toastMessage(
+                      'Something went wrong. Please try again.',
+                      2500,
+                      'custom-toast'
+                    );
                   }
                 }
               );
@@ -376,12 +370,11 @@ export class Tab1Page {
               this.phoneNumber = '';
             } else {
               this.isLoading = false;
-              const toast = await this.toastCtrl.create({
-                message: 'Something went wrong, Try again!',
-                duration: 5000,
-                cssClass: 'custom-toast',
-              });
-              toast.present();
+              this._memberProfile.toastMessage(
+                'Something went wrong. Please try again.',
+                2500,
+                'custom-toast'
+              );
             }
           }
         );
@@ -389,12 +382,11 @@ export class Tab1Page {
         this.isLoading = false;
         this.display = '';
         this.phoneNumber = '';
-        const toast = await this.toastCtrl.create({
-          message: 'Enter Valid Phone Number',
-          duration: 5000,
-          cssClass: 'custom-toastDanger',
-        });
-        toast.present();
+        this._memberProfile.toastMessage(
+          'Please enter a valid phone number.',
+          2500,
+          'custom-toastDanger'
+        );
       }
     }
   }
@@ -461,35 +453,8 @@ export class Tab1Page {
             }
           }
           break;
-        case '0':
-          this.addnumber('0');
-          break;
-        case '1':
-          this.addnumber('1');
-          break;
-        case '2':
-          this.addnumber('2');
-          break;
-        case '3':
-          this.addnumber('3');
-          break;
-        case '4':
-          this.addnumber('4');
-          break;
-        case '5':
-          this.addnumber('5');
-          break;
-        case '6':
-          this.addnumber('6');
-          break;
-        case '7':
-          this.addnumber('7');
-          break;
-        case '8':
-          this.addnumber('8');
-          break;
-        case '9':
-          this.addnumber('9');
+        default:
+          this.addnumber(val);
           break;
       }
     }
@@ -520,61 +485,94 @@ export class Tab1Page {
     }
   }
 
-  GetChecklistByBusinessGroupID() {
+  getTextconfigurationByBusinessGroupID() {
     //For getting checklist if no member sign in currently
     this._memberProfile
       .GetBusinessGroupWiseTextconfiguration(this.businessGroupId)
-      .subscribe((data: any) => {
-        this.InfoText = data;
-      });
+      .subscribe(
+        (data: any) => {
+          this.InfoText = data;
+        },
+        (error: any) => {
+          // Handle error (e.g., show error message)
+          console.error('Error occurred while fetching checklist:', error);
+        }
+      );
   }
 
-  GetDynamicFieldsByBusinessGroupId() {
-    this._memberProfile
-      .GetDynamicFieldsByBusinessGroupId(this.businessGroupId)
-      .subscribe(async (data: any) => {
-        localStorage.removeItem('DynamicField');
+  // GetDynamicFieldsByBusinessGroupId() {
+  //   this._memberProfile
+  //     .GetDynamicFieldsByBusinessGroupId(this.businessGroupId)
+  //     .subscribe(async (data: any) => {
+  //       localStorage.removeItem('DynamicField');
 
-        localStorage.setItem('DynamicField', JSON.stringify(data));
-        if (
-          localStorage.getItem('BgImg') == null ||
-          localStorage.getItem('BgImg') == undefined ||
-          localStorage.getItem('BgImg') == ''
-        ) {
-          localStorage.removeItem('BgImg');
-          localStorage.setItem('BgImg', String(data.customerBGPath1));
-        } else {
-          if (
-            (localStorage.getItem('BgImg') || '').toString().trim() !=
-            data.customerBGPath1.toString().trim()
-          ) {
-            localStorage.removeItem('BgImg');
-            localStorage.setItem('BgImg', String(data.customerBGPath1));
-          }
-        }
-        this.bgImg =
-          CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
+  //       localStorage.setItem('DynamicField', JSON.stringify(data));
+  //       if (
+  //         localStorage.getItem('BgImg') == null ||
+  //         localStorage.getItem('BgImg') == undefined ||
+  //         localStorage.getItem('BgImg') == ''
+  //       ) {
+  //         localStorage.removeItem('BgImg');
+  //         localStorage.setItem('BgImg', String(data.customerBGPath1));
+  //       } else {
+  //         if (
+  //           (localStorage.getItem('BgImg') || '').toString().trim() !=
+  //           data.customerBGPath1.toString().trim()
+  //         ) {
+  //           localStorage.removeItem('BgImg');
+  //           localStorage.setItem('BgImg', String(data.customerBGPath1));
+  //         }
+  //       }
+  //       this.bgImg =
+  //         CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
 
-        if (
-          localStorage.getItem('BgImg1') == null ||
-          localStorage.getItem('BgImg1') == undefined ||
-          localStorage.getItem('BgImg1') == ''
-        ) {
-          localStorage.removeItem('BgImg1');
-          localStorage.setItem('BgImg1', String(data.customerBGPath2));
-        } else {
-          if (
-            (localStorage.getItem('BgImg1') || '').toString().trim() !=
-            data.customerBGPath2.toString().trim()
-          ) {
-            localStorage.removeItem('BgImg1');
-            localStorage.setItem('BgImg1', String(data.customerBGPath2));
-          }
-        }
+  //       if (
+  //         localStorage.getItem('BgImg1') == null ||
+  //         localStorage.getItem('BgImg1') == undefined ||
+  //         localStorage.getItem('BgImg1') == ''
+  //       ) {
+  //         localStorage.removeItem('BgImg1');
+  //         localStorage.setItem('BgImg1', String(data.customerBGPath2));
+  //       } else {
+  //         if (
+  //           (localStorage.getItem('BgImg1') || '').toString().trim() !=
+  //           data.customerBGPath2.toString().trim()
+  //         ) {
+  //           localStorage.removeItem('BgImg1');
+  //           localStorage.setItem('BgImg1', String(data.customerBGPath2));
+  //         }
+  //       }
 
-        this.dynamicField = JSON.parse(
-          localStorage.getItem('DynamicField') || '{}'
-        );
-      });
+  //       this.dynamicField = JSON.parse(
+  //         localStorage.getItem('DynamicField') || '{}'
+  //       );
+  //     });
+  // }
+
+  async getDynamicFieldsByBusinessGroupId() {
+    try {
+      const data = await this._memberProfile
+        .GetDynamicFieldsByBusinessGroupId(this.businessGroupId)
+        .toPromise();
+      this.updateLocalStorageItem('BgImg', data.customerBGPath1);
+      this.updateLocalStorageItem('BgImg1', data.customerBGPath2);
+      this.bgImg =
+        CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
+      this.dynamicField = JSON.parse(
+        localStorage.getItem('DynamicField') || '{}'
+      );
+    } catch (error) {
+      // Handle the error here
+    }
+  }
+
+  private updateLocalStorageItem(key: string, value: any) {
+    const localStorageKey = `localStorage.${key}`;
+    const currentValue = localStorage.getItem(localStorageKey);
+
+    if (!currentValue || currentValue.trim() !== value.toString().trim()) {
+      localStorage.removeItem(localStorageKey);
+      localStorage.setItem(localStorageKey, value.toString());
+    }
   }
 }

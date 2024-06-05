@@ -196,13 +196,11 @@ export class NewMemberOptInPage {
         this.alert.dismiss();
       }
       this.router.navigate(['tab1']);
-
-      const toast = await this.toastCtrl.create({
-        message: 'Something went wrong, Please try again!',
-        duration: 3500,
-        cssClass: 'custom-toastDanger',
-      });
-      toast.present();
+      this._memberProfile.toastMessage(
+        'Something went wrong. Please try again.',
+        3500,
+        'custom-toastDanger'
+      );
     }
   }
 
@@ -265,12 +263,11 @@ export class NewMemberOptInPage {
       this.AddMemberDetails.optIn.value == '' &&
       this.dynamicField.isOptInRequired == true
     ) {
-      const toast = await this.toastCtrl.create({
-        message: 'Please select one option for opt-in!',
-        duration: 3500,
-        cssClass: 'custom-toast',
-      });
-      toast.present();
+      this._memberProfile.toastMessage(
+        'Please select one option to opt-in.',
+        2500,
+        'custom-toast'
+      );
     } else {
       let optin =
         this.AddMemberDetails.optIn.value == null ||
@@ -318,13 +315,11 @@ export class NewMemberOptInPage {
         this.submitData();
       } else {
         // this.router.navigate(['/tab1']);
-        const toast = await this.toastCtrl.create({
-          message:
-            'Please confirm that you are at least 21 years old to proceed!',
-          duration: 3500,
-          cssClass: 'custom-toastDanger',
-        });
-        toast.present();
+        this._memberProfile.toastMessage(
+          'Please confirm that you are at least 21 years old to proceed.',
+          3000,
+          'custom-toastDanger'
+        );
       }
     } else {
       this.submitData();
@@ -391,12 +386,11 @@ export class NewMemberOptInPage {
             },
             async (error) => {
               this.isLoading = false;
-              const toast = await this.toastCtrl.create({
-                message: 'Something went wrong, Please try again!',
-                duration: 3500,
-                cssClass: 'custom-toast',
-              });
-              toast.present();
+              this._memberProfile.toastMessage(
+                'Something went wrong. Please try again.',
+                3500,
+                'custom-toast'
+              );
             }
           );
       } else {
@@ -465,12 +459,11 @@ export class NewMemberOptInPage {
                   },
                   async (error) => {
                     this.isLoading = false;
-                    const toast = await this.toastCtrl.create({
-                      message: 'Something went wrong, Please try again!',
-                      duration: 3500,
-                      cssClass: 'custom-toast',
-                    });
-                    toast.present();
+                    this._memberProfile.toastMessage(
+                      'Something went wrong. Please try again.',
+                      3500,
+                      'custom-toast'
+                    );
                   }
                 );
             } catch (error) {

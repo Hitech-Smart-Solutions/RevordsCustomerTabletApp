@@ -273,12 +273,11 @@ export class Tab2Page {
                   if (this.countdownAfter != undefined) {
                     this.countdownAfter.stop();
                   }
-                  const toast = await this.toastCtrl.create({
-                    message: "Something went wrong!",
-                    duration: 2500,
-                    cssClass: 'custom-toast',
-                  });
-                  toast.present();
+                  this._memberProfile.toastMessage(
+                    'Something went wrong.',
+                    2500,
+                    'custom-toast'
+                  );
                   this.router.navigate(['/tab1']);
                 }
               }
@@ -314,12 +313,11 @@ export class Tab2Page {
                     if (this.countdownAfter != undefined) {
                       this.countdownAfter.stop();
                     }
-                    const toast = await this.toastCtrl.create({
-                      message: "Something went wrong!",
-                      duration: 2500,
-                      cssClass: 'custom-toast',
-                    });
-                    toast.present();
+                    this._memberProfile.toastMessage(
+                      'Something went wrong.',
+                      2500,
+                      'custom-toast'
+                    );
                     this.router.navigate(['/tab1']);
                   }
                 }
