@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { GetMemberProfileService } from '../api/services/get-member-profile.service';
 import * as CONSTANTS from '../api/services/Constants';
+import { Deploy } from 'cordova-plugin-ionic/dist/ngx';
 
 @Component({
   selector: 'app-login',
@@ -16,16 +17,37 @@ export class LoginComponent implements OnInit {
   userData: any;
   showLoginForm: boolean = false;
   isLoadingMember = false;
-
+  updateStatus: string = 'Update not started';
   constructor(
     private user: User,
     private router: Router,
     private toastCtrl: ToastController,
-    private memberService: GetMemberProfileService
+    private memberService: GetMemberProfileService,private _deploy: Deploy
   ) {}
 
-  ngOnInit() {}
-
+  ngOnInit() {
+    this.performManualUpdate();
+  }
+  async performManualUpdate() {
+    this.updateStatus = 'Checking for Update';
+    const update = await this._deploy.checkForUpdate()
+    if (update.available){
+      this.updateStatus = 'Update found. Downloading update';
+      await this._deploy.downloadUpdate((progress) => {
+        console.log(progress);
+      })
+      this.updateStatus = 'Update downloaded. Extracting update';
+      await this._deploy.extractUpdate((progress) => {
+        console.log(progress);
+      })
+      console.log('Reloading app');
+      this.updateStatus = 'Update extracted. Reloading app';
+      await this._deploy.reloadApp();
+    } else {
+      console.log('No update available');
+      this.updateStatus = 'No update available';
+    }
+   }
   signUp() {
     this.showLoginForm = true;
     this.isLoadingMember = true;
