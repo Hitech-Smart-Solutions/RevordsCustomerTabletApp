@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.performManualUpdate();
+    
   }
   async performManualUpdate() {
     this.updateStatus = 'Checking for Update';

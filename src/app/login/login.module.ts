@@ -7,7 +7,7 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 
 import { LoginComponentRoutingModule } from './login-routing.module';
 import { GetMemberProfileService } from '../api/services/get-member-profile.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { MembersVistLog, Model } from '../tab2/model';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { MembersVistLog, Model } from '../tab2/model';
   declarations: [LoginComponent],
   providers: [
     GetMemberProfileService,
-    HttpClient,
+    
     Model,
     MembersVistLog
   ],
