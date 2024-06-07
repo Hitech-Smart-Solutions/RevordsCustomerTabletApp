@@ -87,7 +87,7 @@ export class Tab1Page {
 
   ionViewWillEnter() {
     this.getTextconfigurationByBusinessGroupID();
-    this.getDynamicFieldsByBusinessGroupId();
+    this.GetDynamicFieldsByBusinessGroupId();
     this._memberProfile
       .GetBusinessProfilesByID(this.BusinessLocationID)
       .subscribe((data: any) => {
@@ -549,30 +549,52 @@ export class Tab1Page {
   //     });
   // }
 
-  async getDynamicFieldsByBusinessGroupId() {
-    try {
-      const data = await this._memberProfile
-        .GetDynamicFieldsByBusinessGroupId(this.businessGroupId)
-        .toPromise();
-      this.updateLocalStorageItem('BgImg', data.customerBGPath1);
-      this.updateLocalStorageItem('BgImg1', data.customerBGPath2);
-      this.bgImg =
-        CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
-      this.dynamicField = JSON.parse(
-        localStorage.getItem('DynamicField') || '{}'
-      );
-    } catch (error) {
-      // Handle the error here
-    }
-  }
+  GetDynamicFieldsByBusinessGroupId() {
+    this._memberProfile
+      .GetDynamicFieldsByBusinessGroupId(this.businessGroupId)
+      .subscribe(async (data: any) => {
+        localStorage.removeItem('DynamicField');
 
-  private updateLocalStorageItem(key: string, value: any) {
-    const localStorageKey = `localStorage.${key}`;
-    const currentValue = localStorage.getItem(localStorageKey);
+        localStorage.setItem('DynamicField', JSON.stringify(data));
+        if (
+          localStorage.getItem('BgImg') == null ||
+          localStorage.getItem('BgImg') == undefined ||
+          localStorage.getItem('BgImg') == ''
+        ) {
+          localStorage.removeItem('BgImg');
+          localStorage.setItem('BgImg', String(data.customerBGPath1));
+        } else {
+          if (
+            (localStorage.getItem('BgImg') || '').toString().trim() !=
+            data.customerBGPath1.toString().trim()
+          ) {
+            localStorage.removeItem('BgImg');
+            localStorage.setItem('BgImg', String(data.customerBGPath1));
+          }
+        }
+        this.bgImg =
+          CONSTANTS.DownloadAPK_ENDPOINT + localStorage.getItem('BgImg');
 
-    if (!currentValue || currentValue.trim() !== value.toString().trim()) {
-      localStorage.removeItem(localStorageKey);
-      localStorage.setItem(localStorageKey, value.toString());
-    }
+        if (
+          localStorage.getItem('BgImg1') == null ||
+          localStorage.getItem('BgImg1') == undefined ||
+          localStorage.getItem('BgImg1') == ''
+        ) {
+          localStorage.removeItem('BgImg1');
+          localStorage.setItem('BgImg1', String(data.customerBGPath2));
+        } else {
+          if (
+            (localStorage.getItem('BgImg1') || '').toString().trim() !=
+            data.customerBGPath2.toString().trim()
+          ) {
+            localStorage.removeItem('BgImg1');
+            localStorage.setItem('BgImg1', String(data.customerBGPath2));
+          }
+        }
+
+        this.dynamicField = JSON.parse(
+          localStorage.getItem('DynamicField') || '{}'
+        );
+      });
   }
 }
